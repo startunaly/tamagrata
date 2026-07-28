@@ -896,12 +896,23 @@
     $("entry-dock").classList.toggle("hidden", mode === "none");
   }
 
+  // Пока идёт переход, кнопки не должны срабатывать: во время анимации кажется,
+  // что тап не прошёл, и люди дотапывают. Без этого флага каждый лишний тап
+  // ставил свой таймер, onboardingStep перепрыгивал конец массива цитат,
+  // и человек оставался в бесконечном лесу с пустой карточкой.
+  let walking = false;
+
   function walkForward(next) {
+    if (walking) return;
+    walking = true;
     forestEl.classList.remove("walking");
     void forestEl.offsetWidth;
     forestEl.classList.add("walking");
     quoteCardEl.classList.remove("visible");
-    setTimeout(next, 620);
+    setTimeout(() => {
+      walking = false;
+      next();
+    }, 620);
   }
 
   function startOnboarding() {
@@ -915,6 +926,8 @@
 
   function renderOnboardingStep() {
     const quotes = t("onbQuotes");
+    // Страховка: пустая карточка без выхода хуже лишнего шага.
+    onboardingStep = clamp(onboardingStep, 0, quotes.length - 1);
     showQuote(quotes[onboardingStep]);
 
     if (onboardingStep === 1) {
@@ -938,6 +951,7 @@
   }
 
   function finishOnboarding() {
+    if (settings.onboarded) return;
     settings.onboarded = true;
     saveSettings();
     quoteCardEl.classList.remove("visible");
