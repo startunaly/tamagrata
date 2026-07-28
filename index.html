@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Тепло — дневник благодарности</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app-frame">
+
+  <div class="tab-switch" id="tab-switch">
+    <button type="button" class="tab-btn active" data-tab="room" id="tab-scene">Полянка</button>
+    <button type="button" class="tab-btn" data-tab="journal" id="tab-journal">Записи</button>
+  </div>
+
+  <p class="app-wordmark">Тепло</p>
+
+  <button type="button" class="inventory-btn" id="inventory-btn" title="Твои вещи">🧺</button>
+
+  <section class="view view-room active" id="view-room">
+
+    <div class="room-stage" id="room-stage">
+
+      <div class="sky">
+        <div class="sun"></div>
+        <div class="cloud c1"></div>
+        <div class="cloud c2"></div>
+        <div class="cloud c3"></div>
+      </div>
+
+      <div class="hills">
+        <span class="hill h1"></span>
+        <span class="hill h2"></span>
+        <span class="hill h3"></span>
+      </div>
+
+      <div class="lake"></div>
+      <div class="horizon-haze"></div>
+
+      <div class="scene-3d">
+        <div class="field">
+          <div class="pond"></div>
+        </div>
+      </div>
+
+      <div class="room-bubbles">
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+
+      <div class="forest" id="forest">
+        <svg class="tree-row tree-far" id="tree-far" viewBox="0 0 400 100" preserveAspectRatio="none"></svg>
+        <svg class="tree-row tree-mid" id="tree-mid" viewBox="0 0 400 100" preserveAspectRatio="none"></svg>
+        <svg class="tree-row tree-near" id="tree-near" viewBox="0 0 400 100" preserveAspectRatio="none"></svg>
+        <div class="forest-mist"></div>
+      </div>
+
+      <div class="room-vignette"></div>
+
+      <div class="room-decos" id="room-decos"></div>
+
+      <div class="quote-card" id="quote-card">
+        <p class="quote-text" id="quote-text"></p>
+      </div>
+
+      <div class="pet-column" id="pet-column">
+        <div class="pet-speech" id="pet-speech">
+          <input type="text" id="pet-name-input" class="pet-name-input" maxlength="24" value="Искорка" />
+          <p class="companion-message" id="companion-message"></p>
+        </div>
+
+        <div class="avatar-wrap" id="avatar-wrap">
+          <div class="glow" id="glow"></div>
+          <div class="pet-shadow"></div>
+          <img id="avatar" class="avatar-img" alt="Питомец" />
+          <div class="reaction-burst" id="reaction-burst"></div>
+        </div>
+      </div>
+
+      <div class="egg-hint" id="egg-hint"></div>
+
+      <div class="cocktail" id="cocktail"></div>
+
+    </div>
+
+    <div class="entry-dock" id="entry-dock">
+
+      <div class="dock-pane dock-journal active" id="dock-journal">
+        <label for="entry-input" class="prompt" id="prompt-label"></label>
+        <textarea id="entry-input" rows="2"></textarea>
+        <div class="journal-actions">
+          <button type="button" id="new-prompt-btn" class="ghost-btn"></button>
+          <button type="button" id="save-btn" class="primary-btn"></button>
+        </div>
+        <button type="button" id="hard-day-btn" class="hard-day-btn"></button>
+      </div>
+
+      <div class="dock-pane dock-choices" id="dock-choices"></div>
+
+    </div>
+
+  </section>
+
+  <section class="view view-journal" id="view-journal">
+    <h2 id="journal-title">Твои записи</h2>
+    <div id="entries-list" class="entries-list"></div>
+    <p id="empty-state" class="empty-state"></p>
+  </section>
+
+</div>
+
+<div class="overlay lang-screen hidden" id="lang-screen">
+  <div class="overlay-card">
+    <p class="lang-emoji">🌱</p>
+    <h2 class="lang-title">Выбери язык · Choose language</h2>
+    <div class="lang-options">
+      <button type="button" class="primary-btn" data-lang="ru">Русский</button>
+      <button type="button" class="primary-btn" data-lang="en">English</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay inventory-panel" id="inventory-panel">
+  <div class="overlay-card inventory-card">
+    <h2 id="inventory-title">Твои вещи</h2>
+    <p class="inventory-hint" id="inventory-hint"></p>
+    <div class="inventory-list" id="inventory-list"></div>
+    <div class="inventory-footer">
+      <div class="lang-mini" id="lang-mini">
+        <button type="button" data-lang="ru">RU</button>
+        <button type="button" data-lang="en">EN</button>
+      </div>
+      <button type="button" class="primary-btn" id="inventory-close"></button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-stack" id="toast-stack"></div>
+<div class="star-layer" id="star-layer"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
