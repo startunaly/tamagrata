@@ -75,10 +75,27 @@
         <p class="quote-text" id="quote-text"></p>
       </div>
 
+      <div class="tale-catcher" id="tale-catcher"></div>
+
       <div class="pet-column" id="pet-column">
         <div class="pet-speech" id="pet-speech">
           <input type="text" id="pet-name-input" class="pet-name-input" maxlength="24" value="Искорка" />
           <p class="companion-message" id="companion-message"></p>
+        </div>
+
+        <div class="tale-bubble" id="tale-bubble" hidden>
+          <div class="tale-scroll" id="tale-scroll">
+            <p class="tale-line" id="tale-line"></p>
+
+            <div class="tale-entry" id="tale-entry" hidden>
+              <p class="tale-entry-date" id="tale-entry-date"></p>
+              <p class="tale-entry-prompt" id="tale-entry-prompt"></p>
+              <p class="tale-entry-text" id="tale-entry-text"></p>
+            </div>
+
+            <p class="tale-note" id="tale-note" hidden></p>
+          </div>
+          <span class="tale-more" id="tale-more" aria-hidden="true"></span>
         </div>
 
         <div class="avatar-wrap" id="avatar-wrap">
@@ -157,23 +174,6 @@
       </div>
       <button type="button" class="primary-btn" id="inventory-close"></button>
     </div>
-  </div>
-</div>
-
-<div class="overlay tale-overlay" id="tale-overlay">
-  <div class="overlay-card tale-card">
-    <p class="tale-intro" id="tale-intro" hidden></p>
-    <p class="tale-text" id="tale-text"></p>
-
-    <div class="tale-entry" id="tale-entry" hidden>
-      <p class="tale-entry-date" id="tale-entry-date"></p>
-      <p class="tale-entry-prompt" id="tale-entry-prompt"></p>
-      <p class="tale-entry-text" id="tale-entry-text"></p>
-    </div>
-
-    <p class="tale-note" id="tale-note" hidden></p>
-
-    <button type="button" class="primary-btn" id="tale-next"></button>
   </div>
 </div>
 

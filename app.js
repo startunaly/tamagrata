@@ -164,8 +164,6 @@
       ],
 
       // Питомцу есть что рассказать: значок над головой, тап — карточка.
-      taleNext: "дальше",
-      taleDone: "спасибо",
       taleBadge: "У питомца есть что рассказать",
 
       // Яйцо ещё не вылупилось: мир только на слух и на ощупь.
@@ -340,8 +338,6 @@
         "Ooh, delicious! Thank you.",
       ],
 
-      taleNext: "next",
-      taleDone: "thank you",
       taleBadge: "Your companion has something to tell you",
 
       eggTales: [
@@ -440,15 +436,16 @@
   const inventoryPanelEl = $("inventory-panel");
   const inventoryListEl = $("inventory-list");
   const petBadgeEl = $("pet-badge");
-  const taleOverlayEl = $("tale-overlay");
-  const taleIntroEl = $("tale-intro");
-  const taleTextEl = $("tale-text");
+  const taleBubbleEl = $("tale-bubble");
+  const taleScrollEl = $("tale-scroll");
+  const taleCatcherEl = $("tale-catcher");
+  const taleLineEl = $("tale-line");
+  const taleMoreEl = $("tale-more");
   const taleEntryEl = $("tale-entry");
   const taleEntryDateEl = $("tale-entry-date");
   const taleEntryPromptEl = $("tale-entry-prompt");
   const taleEntryTextEl = $("tale-entry-text");
   const taleNoteEl = $("tale-note");
-  const taleNextBtn = $("tale-next");
   const importFileEl = $("import-file");
 
   let entries = loadEntries();
@@ -784,33 +781,159 @@
     updateTaleBadge();
   }
 
-  function showTale(tale) {
-    taleIntroEl.textContent = tale.intro || "";
-    taleIntroEl.hidden = !tale.intro;
+  // Реплика живёт в пузыре над питомцем, а места там мало. Уменьшать шрифт
+  // до нечитаемого нельзя, поэтому длинный текст листается по страницам,
+  // как в визуальной новелле: тап — следующая порция.
 
-    taleTextEl.textContent = tale.text;
+  const PAGE_LIMIT = 150;
 
-    if (tale.entry) {
-      taleEntryDateEl.textContent = t("memoryAgo") + " " + formatDate(tale.entry.createdAt);
-      taleEntryPromptEl.textContent = tale.entry.prompt || "";
-      taleEntryTextEl.textContent = tale.entry.text;
-      taleEntryEl.hidden = false;
-    } else {
-      taleEntryEl.hidden = true;
+  let talePages = [];
+  let talePageIndex = 0;
+  let speechWasHidden = false;
+
+  // «...» — часть фразы, а не конец: режем по знакам, потом склеиваем
+  // короткие куски обратно, чтобы страница не состояла из одного слова.
+  function splitSentences(text) {
+    const parts = [];
+    const re = /[^.!?…]*[.!?…]+/g;
+    let m;
+    let last = 0;
+    while ((m = re.exec(text))) {
+      parts.push(m[0].trim());
+      last = re.lastIndex;
     }
+    if (last < text.length) {
+      const rest = text.slice(last).trim();
+      if (rest) parts.push(rest);
+    }
+    return parts.filter(Boolean);
+  }
 
-    taleNoteEl.textContent = tale.note || "";
-    taleNoteEl.hidden = !tale.note;
+  // Запись человека может быть без единой точки («вававава» на пол-экрана),
+  // тогда деление по предложениям не сработает — режем по словам.
+  function splitLongChunk(chunk) {
+    if (chunk.length <= PAGE_LIMIT * 1.4) return [chunk];
+    const out = [];
+    let cur = "";
+    for (const word of chunk.split(/\s+/)) {
+      if (!cur) cur = word;
+      else if ((cur + " " + word).length <= PAGE_LIMIT) cur += " " + word;
+      else {
+        out.push(cur);
+        cur = word;
+      }
+    }
+    if (cur) out.push(cur);
+    return out;
+  }
 
-    taleNextBtn.textContent = taleQueue.length ? t("taleNext") : t("taleDone");
-    taleOverlayEl.classList.add("open");
+  function chunkText(text) {
+    const chunks = [];
+    let cur = "";
+    for (const s of splitSentences(text)) {
+      if (!cur) cur = s;
+      else if ((cur + " " + s).length <= PAGE_LIMIT) cur += " " + s;
+      else {
+        chunks.push(cur);
+        cur = s;
+      }
+    }
+    if (cur) chunks.push(cur);
+    const flat = [];
+    for (const c of chunks.length ? chunks : [text]) flat.push(...splitLongChunk(c));
+    return flat;
+  }
+
+  function buildPages(tale) {
+    const pages = [];
+    if (tale.intro) pages.push({ text: tale.intro, muted: true });
+    for (const c of chunkText(tale.text)) pages.push({ text: c });
+
+    // Запись получает свои экраны. Листать её так же, как историю, надёжнее
+    // прокрутки: в пузыре прокрутка и переход к следующей странице — один
+    // и тот же жест, и они дерутся между собой.
+    if (tale.entry) {
+      const parts = chunkText(tale.entry.text);
+      parts.forEach((part, i) => {
+        pages.push({
+          entry: tale.entry,
+          entryText: part,
+          entryHead: i === 0,
+          note: i === parts.length - 1 ? tale.note : null,
+        });
+      });
+    } else if (tale.note) {
+      pages.push({ text: tale.note, muted: true });
+    }
+    return pages;
+  }
+
+  function showTale(tale) {
+    talePages = buildPages(tale);
+    talePageIndex = 0;
+
+    speechWasHidden = petSpeechEl.classList.contains("hidden");
+    petSpeechEl.classList.add("hidden");
+    taleBubbleEl.hidden = false;
+    stageEl.classList.add("tale-open");
+
+    renderTalePage();
 
     // Воспоминание — тихий момент, салют тут не к месту.
     petReact(false, false, !!tale.isMemory || !!tale.entry);
   }
 
+  function renderTalePage() {
+    const page = talePages[talePageIndex];
+    if (!page) return closeTale();
+
+    taleLineEl.textContent = page.text || "";
+    taleLineEl.hidden = !page.text;
+    taleLineEl.classList.toggle("muted", !!page.muted);
+
+    if (page.entry) {
+      // Шапка с датой и вопросом — только на первом экране записи,
+      // дальше идёт продолжение текста и повторять её незачем.
+      taleEntryDateEl.textContent = t("memoryAgo") + " " + formatDate(page.entry.createdAt);
+      taleEntryPromptEl.textContent = page.entry.prompt || "";
+      taleEntryDateEl.hidden = !page.entryHead;
+      taleEntryPromptEl.hidden = !page.entryHead || !page.entry.prompt;
+      taleEntryTextEl.textContent = page.entryText;
+      taleEntryEl.hidden = false;
+    } else {
+      taleEntryEl.hidden = true;
+    }
+
+    taleNoteEl.textContent = page.note || "";
+    taleNoteEl.hidden = !page.note;
+
+    const isLast = talePageIndex >= talePages.length - 1 && taleQueue.length === 0;
+    taleMoreEl.textContent = isLast ? "✕" : "▾";
+    taleMoreEl.classList.toggle("last", isLast);
+
+    taleScrollEl.scrollTop = 0;
+    taleBubbleEl.classList.remove("page-in");
+    void taleBubbleEl.offsetWidth;
+    taleBubbleEl.classList.add("page-in");
+  }
+
+  function advanceTale() {
+    talePageIndex += 1;
+    if (talePageIndex < talePages.length) return renderTalePage();
+    if (taleQueue.length) return openNextTale();
+    closeTale();
+  }
+
   function closeTale() {
-    taleOverlayEl.classList.remove("open");
+    taleBubbleEl.hidden = true;
+    stageEl.classList.remove("tale-open");
+    if (!speechWasHidden) petSpeechEl.classList.remove("hidden");
+    talePages = [];
+    talePageIndex = 0;
+  }
+
+  function taleIsOpen() {
+    return !taleBubbleEl.hidden;
   }
 
   // Тап по предмету на полянке достаёт запись, вместе с которой он появился.
@@ -1399,23 +1522,35 @@
 
   avatarWrapEl.addEventListener("click", () => {
     if (settings.onboarded && !settings.started) return hatchStart();
+    if (taleIsOpen()) return advanceTale();
     // Тап по питомцу — причина открыть приложение в день, когда писать не хочется.
     if (taleQueue.length) openNextTale();
   });
 
   petBadgeEl.addEventListener("click", (e) => {
     e.stopPropagation();
+    if (taleIsOpen()) return advanceTale();
     openNextTale();
   });
 
-  taleNextBtn.addEventListener("click", () => {
-    closeTale();
-    if (taleQueue.length) setTimeout(openNextTale, 260);
+  // В норме страницы влезают целиком, но если прокрутка всё же включилась,
+  // протаскивание не должно засчитываться за тап и листать страницу.
+  let tapStart = null;
+
+  taleBubbleEl.addEventListener("pointerdown", (e) => {
+    tapStart = { x: e.clientX, y: e.clientY };
   });
 
-  taleOverlayEl.addEventListener("click", (e) => {
-    if (e.target === taleOverlayEl) closeTale();
+  taleBubbleEl.addEventListener("click", (e) => {
+    if (tapStart) {
+      const moved = Math.hypot(e.clientX - tapStart.x, e.clientY - tapStart.y);
+      tapStart = null;
+      if (moved > 12) return;
+    }
+    advanceTale();
   });
+
+  taleCatcherEl.addEventListener("click", advanceTale);
 
   $("export-json").addEventListener("click", () => saveFile(buildJson(), `teplo-${stamp()}.json`, "application/json"));
   $("export-txt").addEventListener("click", () => saveFile(buildTxt(), `teplo-${stamp()}.txt`, "text/plain"));
