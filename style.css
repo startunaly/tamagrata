@@ -378,6 +378,23 @@ body {
   transform: translate(-50%, -50%) scale(var(--deco-scale, 1));
   animation: decoAppear 0.6s ease-out;
   filter: drop-shadow(0 3px 4px rgba(25, 80, 50, 0.3));
+  /* предмет стал кнопкой — тап достаёт запись, с которой он появился */
+  border: 0;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+  line-height: 1;
+  transition: filter 0.2s ease;
+}
+
+.deco:hover,
+.deco:focus-visible {
+  filter: drop-shadow(0 3px 6px rgba(25, 80, 50, 0.45)) brightness(1.08);
+  outline: none;
+}
+
+.deco:active {
+  transform: translate(-50%, -50%) scale(calc(var(--deco-scale, 1) * 0.92));
 }
 
 .deco::after {
@@ -1122,7 +1139,8 @@ button:active {
 }
 
 .overlay.hidden,
-.inventory-panel:not(.open) {
+.inventory-panel:not(.open),
+.tale-overlay:not(.open) {
   display: none;
 }
 
@@ -1339,6 +1357,160 @@ body.journal-tab .inventory-btn {
 .dock-journal.soft .hard-day-btn {
   opacity: 0.9;
   text-decoration-color: rgba(120, 155, 165, 0.7);
+}
+
+/* --- рассказы питомца --- */
+
+/* Значок над головой: единственное приглашение, никакого таймера и сгорания. */
+.pet-badge {
+  position: absolute;
+  top: 2%;
+  right: 6%;
+  z-index: 4;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 2px solid rgba(255, 255, 255, 0.95);
+  border-radius: 50%;
+  background: linear-gradient(180deg, #ffe08a 0%, var(--gold) 100%);
+  color: #8a5a12;
+  font-family: inherit;
+  font-size: 1.05rem;
+  font-weight: 800;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(180, 140, 40, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  animation: badgeBob 2.2s ease-in-out infinite;
+}
+
+.pet-badge:active { transform: scale(0.92); }
+
+@keyframes badgeBob {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50%      { transform: translateY(-5px) scale(1.06); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pet-badge { animation: none; }
+}
+
+.tale-overlay { z-index: 90; }
+
+.tale-card {
+  width: min(92vw, 380px);
+  max-height: 82svh;
+  overflow-y: auto;
+  text-align: left;
+}
+
+.tale-intro {
+  margin: 0 0 10px;
+  color: var(--ink-soft);
+  font-size: 0.86rem;
+  font-style: italic;
+}
+
+.tale-text {
+  margin: 0;
+  color: var(--ink);
+  font-size: 1.04rem;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+/* Возвращённая запись — цитата, а не элемент интерфейса: отсюда левая полоса. */
+.tale-entry {
+  margin: 16px 0 0;
+  padding: 12px 14px;
+  border-left: 3px solid var(--accent-2);
+  border-radius: 0 14px 14px 0;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.tale-entry-date {
+  margin: 0 0 4px;
+  color: var(--ink-soft);
+  font-size: 0.74rem;
+}
+
+.tale-entry-prompt {
+  margin: 0 0 6px;
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+  font-style: italic;
+}
+
+.tale-entry-text {
+  margin: 0;
+  color: var(--ink);
+  font-size: 0.96rem;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.tale-note {
+  margin: 12px 0 0;
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+}
+
+.tale-card .primary-btn {
+  margin-top: 18px;
+  width: 100%;
+}
+
+@media (prefers-color-scheme: dark) {
+  .tale-entry { background: rgba(255, 255, 255, 0.07); }
+  .pet-badge {
+    border-color: rgba(255, 255, 255, 0.75);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  }
+}
+
+/* --- сохранение записей --- */
+
+.backup-block {
+  margin: 16px 0 4px;
+  padding-top: 14px;
+  border-top: 1px solid var(--card-border);
+  text-align: left;
+}
+
+.backup-title {
+  margin: 0 0 4px;
+  color: var(--ink);
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.backup-hint {
+  margin: 0 0 10px;
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.backup-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.backup-actions .ghost-btn {
+  flex: 1 1 auto;
+  padding: 7px 10px;
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.45);
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
+.backup-actions .ghost-btn:hover { color: var(--ink); }
+
+@media (prefers-color-scheme: dark) {
+  .backup-actions .ghost-btn { background: rgba(255, 255, 255, 0.06); }
 }
 
 /* --- адаптив --- */

@@ -2,8 +2,19 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Тепло — дневник благодарности</title>
+
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#a8e6fb">
+<meta name="description" content="Дневник благодарности с питомцем, который растёт от твоих записей.">
+
+<!-- iOS не читает манифест: иконку и полноэкранный режим приходится задавать отдельно -->
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Тепло">
+
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -75,6 +86,7 @@
           <div class="pet-shadow"></div>
           <img id="avatar" class="avatar-img" alt="Питомец" />
           <div class="reaction-burst" id="reaction-burst"></div>
+          <button type="button" class="pet-badge" id="pet-badge" hidden>!</button>
         </div>
       </div>
 
@@ -126,6 +138,19 @@
     <h2 id="inventory-title">Твои вещи</h2>
     <p class="inventory-hint" id="inventory-hint"></p>
     <div class="inventory-list" id="inventory-list"></div>
+
+    <div class="backup-block">
+      <h3 class="backup-title" id="export-title"></h3>
+      <p class="backup-hint" id="export-hint"></p>
+      <div class="backup-actions">
+        <button type="button" class="ghost-btn" id="export-json"></button>
+        <button type="button" class="ghost-btn" id="export-txt"></button>
+        <button type="button" class="ghost-btn" id="export-copy"></button>
+        <button type="button" class="ghost-btn" id="import-btn"></button>
+      </div>
+      <input type="file" id="import-file" accept="application/json,.json" hidden />
+    </div>
+
     <div class="inventory-footer">
       <div class="lang-mini" id="lang-mini">
         <button type="button" data-lang="ru">RU</button>
@@ -133,6 +158,23 @@
       </div>
       <button type="button" class="primary-btn" id="inventory-close"></button>
     </div>
+  </div>
+</div>
+
+<div class="overlay tale-overlay" id="tale-overlay">
+  <div class="overlay-card tale-card">
+    <p class="tale-intro" id="tale-intro" hidden></p>
+    <p class="tale-text" id="tale-text"></p>
+
+    <div class="tale-entry" id="tale-entry" hidden>
+      <p class="tale-entry-date" id="tale-entry-date"></p>
+      <p class="tale-entry-prompt" id="tale-entry-prompt"></p>
+      <p class="tale-entry-text" id="tale-entry-text"></p>
+    </div>
+
+    <p class="tale-note" id="tale-note" hidden></p>
+
+    <button type="button" class="primary-btn" id="tale-next"></button>
   </div>
 </div>
 

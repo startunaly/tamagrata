@@ -175,6 +175,66 @@
         "Мне не нужно, чтобы тебе было хорошо. Мне нужно, чтобы ты был.",
         "Пусть сегодня будет так, как есть.",
       ],
+
+      // Питомцу есть что рассказать: значок над головой, тап — карточка.
+      taleNext: "дальше",
+      taleDone: "спасибо",
+      taleBadge: "У питомца есть что рассказать",
+
+      // ЗАГОТОВКИ — их стоит переписать своим голосом.
+      // Массив по стадиям питомца (0–4): чем старше, тем взрослее речь.
+      // Внутри стадии истории берутся случайно, без повторов подряд.
+      awayTales: [
+        [
+          "Пока тебя не было, я нашёл камень. Просто камень, но тёплый.",
+          "Я смотрел, как по травинке ползёт кто-то маленький. Долго смотрел.",
+          "Тут был ветер. Я сидел и слушал, как он проходит через траву.",
+        ],
+        [
+          "Я познакомился с жуком. Он важный, живёт под камнем и всё время занят.",
+          "Возле пруда днём светлее, чем кажется утром. Я проверил.",
+          "Слышал, как что-то шуршало в траве. Мы друг друга не испугались.",
+        ],
+        [
+          "Я обошёл всю полянку по краю. Она больше, чем выглядит.",
+          "Пруд утром совсем другого цвета. Хотел показать, но ты спал, наверное.",
+          "Приходила птица, посидела рядом и улетела. Мы помолчали вместе.",
+        ],
+        [
+          "Я сидел у воды и думал о том, сколько всего ты уже написал.",
+          "Иногда я просто смотрю на вещи, которые у нас появились, и вспоминаю.",
+          "Ночью тут тихо и совсем не страшно. Я проверил, чтобы ты знал.",
+        ],
+        [
+          "Я долго сидел на самом высоком месте и смотрел вдаль. Там тоже хорошо.",
+          "Мне кажется, полянка запоминает всё, что тут было. Как и я.",
+          "Я успел соскучиться, но это было спокойное скучание. Хорошее.",
+        ],
+      ],
+
+      // Вступление к находкам, когда человека не было долго.
+      awayLong: "Меня долго не было слышно, а тут кое-что произошло.",
+
+      memoryLines: [
+        "А помнишь?",
+        "Я тут кое-что вспомнил.",
+        "Смотри, что ты когда-то написал.",
+        "Это до сих пор где-то здесь.",
+      ],
+      memoryAgo: "написано",
+      decoMemoryEmpty: "Эта запись убрана из дневника, но вещь осталась.",
+      decoFrom: "появилась вместе с этой записью",
+
+      exportTitle: "Твои записи — сохранить",
+      exportHint: "Записи хранятся только в этом браузере. Если почистить его данные, они пропадут. Сохрани копию.",
+      exportJson: "Файл для восстановления",
+      exportTxt: "Просто почитать",
+      exportCopy: "Скопировать",
+      importBtn: "Восстановить из файла",
+      copied: "Скопировано",
+      importOk: "Записи восстановлены",
+      importFail: "Не получилось прочитать файл",
+      importConfirm: "Заменить всё, что сейчас есть, содержимым файла?",
     },
 
     en: {
@@ -301,6 +361,61 @@
         "I don't need you to feel good. I just want you here.",
         "Let today be exactly as it is.",
       ],
+
+      taleNext: "next",
+      taleDone: "thank you",
+      taleBadge: "Your companion has something to tell you",
+
+      awayTales: [
+        [
+          "While you were away, I found a stone. Just a stone, but warm.",
+          "I watched something tiny crawl along a blade of grass. For a long while.",
+          "There was wind here. I sat and listened to it move through the grass.",
+        ],
+        [
+          "I met a beetle. Very important, lives under a stone, always busy.",
+          "By the pond it's brighter at noon than it looks in the morning. I checked.",
+          "Something rustled in the grass. Neither of us was frightened.",
+        ],
+        [
+          "I walked the whole edge of the meadow. It's bigger than it looks.",
+          "The pond is a different colour in the morning. I wanted to show you.",
+          "A bird came, sat nearby, and left. We were quiet together.",
+        ],
+        [
+          "I sat by the water thinking about how much you've written by now.",
+          "Sometimes I just look at the things we've gathered and remember.",
+          "It's quiet here at night, and not frightening at all. I checked, so you'd know.",
+        ],
+        [
+          "I sat on the highest spot for a long time, looking far off. It's good there too.",
+          "I think the meadow remembers everything that happened here. Like I do.",
+          "I did miss you, but it was a calm sort of missing. A good one.",
+        ],
+      ],
+
+      awayLong: "You hadn't been around for a while, and a few things happened.",
+
+      memoryLines: [
+        "Remember this?",
+        "I just remembered something.",
+        "Look what you wrote once.",
+        "It's still here somewhere.",
+      ],
+      memoryAgo: "written",
+      decoMemoryEmpty: "That entry was removed from the journal, but the thing stayed.",
+      decoFrom: "arrived together with this entry",
+
+      exportTitle: "Your entries — save a copy",
+      exportHint: "Entries live only in this browser. Clearing its data removes them. Keep a copy.",
+      exportJson: "File for restoring",
+      exportTxt: "Just to read",
+      exportCopy: "Copy",
+      importBtn: "Restore from file",
+      copied: "Copied",
+      importOk: "Entries restored",
+      importFail: "Couldn't read that file",
+      importConfirm: "Replace everything you have now with the contents of the file?",
     },
   };
 
@@ -341,6 +456,17 @@
   const inventoryBtn = $("inventory-btn");
   const inventoryPanelEl = $("inventory-panel");
   const inventoryListEl = $("inventory-list");
+  const petBadgeEl = $("pet-badge");
+  const taleOverlayEl = $("tale-overlay");
+  const taleIntroEl = $("tale-intro");
+  const taleTextEl = $("tale-text");
+  const taleEntryEl = $("tale-entry");
+  const taleEntryDateEl = $("tale-entry-date");
+  const taleEntryPromptEl = $("tale-entry-prompt");
+  const taleEntryTextEl = $("tale-entry-text");
+  const taleNoteEl = $("tale-note");
+  const taleNextBtn = $("tale-next");
+  const importFileEl = $("import-file");
 
   let entries = loadEntries();
   let stats = loadStats();
@@ -406,6 +532,12 @@
       hiddenDecos: [],
       glass: [],
       petName: null,
+      lastVisit: null,
+      // id ачивки -> id записи, написанной в момент её появления
+      decoEntries: {},
+      lastMemoryAt: null,
+      // последние показанные воспоминания, чтобы не крутить одно и то же
+      shownMemories: [],
     };
   }
 
@@ -566,6 +698,151 @@
     messageTimer = setInterval(() => renderMessage(false), 9000);
   }
 
+  // --- рассказы питомца -------------------------------------------------
+  //
+  // Две вещи приходят одним каналом: находки за время отсутствия и
+  // воспоминания из дневника. Значок над головой один, очередь общая —
+  // иначе на питомце висело бы два конкурирующих индикатора.
+  //
+  // Важное свойство: объём растёт вместе с длиной отсутствия. Вернуться
+  // после месяца выгоднее, чем после трёх дней. Ничего не сгорает и не
+  // истекает — не тапнули сегодня, дождётся завтра.
+
+  const AWAY_MIN_GAP_DAYS = 2;
+  const MEMORY_MIN_AGE_DAYS = 14;   // моложе — это ещё не воспоминание
+  const MEMORY_COOLDOWN_DAYS = 3;   // чаще — перестаёт быть событием
+  const MEMORY_HISTORY = 20;
+
+  let taleQueue = [];
+  let taleBag = [];
+  let taleBagStage = -1;
+
+  function stageIndex() {
+    let idx = 0;
+    STAGES.forEach((s, i) => { if (stats.lifetimeEntries >= s.min) idx = i; });
+    return idx;
+  }
+
+  function awayTaleCount(gap) {
+    if (gap >= 21) return 3;
+    if (gap >= 7) return 2;
+    return 1;
+  }
+
+  function nextAwayTale(idx) {
+    if (taleBagStage !== idx || taleBag.length === 0) {
+      taleBagStage = idx;
+      const all = t("awayTales");
+      taleBag = [...(all[idx] || all[0] || [])];
+      for (let i = taleBag.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [taleBag[i], taleBag[j]] = [taleBag[j], taleBag[i]];
+      }
+    }
+    return taleBag.pop();
+  }
+
+  // Записи тяжёлого дня сюда не попадают никогда: бодрое «а помнишь?»
+  // с вытащенной записью про тяжёлое — это ковыряние в ране без спроса.
+  function eligibleMemories() {
+    const old = entries.filter(
+      (e) => !e.soft && daysSince(e.createdAt) >= MEMORY_MIN_AGE_DAYS
+    );
+    const shown = new Set(stats.shownMemories || []);
+    const fresh = old.filter((e) => !shown.has(e.id));
+    return fresh.length ? fresh : old;
+  }
+
+  function buildTaleQueue(gapDays) {
+    taleQueue = [];
+    if (!stats.hatched || !settings.started) return updateTaleBadge();
+
+    if (gapDays >= AWAY_MIN_GAP_DAYS) {
+      const idx = stageIndex();
+      const count = awayTaleCount(gapDays);
+      for (let i = 0; i < count; i++) {
+        const text = nextAwayTale(idx);
+        if (!text) break;
+        taleQueue.push({
+          text,
+          intro: i === 0 && gapDays >= 7 ? t("awayLong") : null,
+        });
+      }
+    }
+
+    const cooled =
+      !stats.lastMemoryAt || daysSince(stats.lastMemoryAt) >= MEMORY_COOLDOWN_DAYS;
+    if (cooled) {
+      const pool = eligibleMemories();
+      if (pool.length) {
+        taleQueue.push({ text: pick(t("memoryLines")), entry: pick(pool), isMemory: true });
+      }
+    }
+
+    updateTaleBadge();
+  }
+
+  function updateTaleBadge() {
+    const has = taleQueue.length > 0;
+    petBadgeEl.hidden = !has;
+    petBadgeEl.title = has ? t("taleBadge") : "";
+  }
+
+  function openNextTale() {
+    if (!taleQueue.length) return;
+    const tale = taleQueue.shift();
+
+    if (tale.isMemory && tale.entry) {
+      stats.lastMemoryAt = new Date().toISOString();
+      stats.shownMemories = [...(stats.shownMemories || []), tale.entry.id].slice(-MEMORY_HISTORY);
+      saveStats();
+    }
+
+    showTale(tale);
+    updateTaleBadge();
+  }
+
+  function showTale(tale) {
+    taleIntroEl.textContent = tale.intro || "";
+    taleIntroEl.hidden = !tale.intro;
+
+    taleTextEl.textContent = tale.text;
+
+    if (tale.entry) {
+      taleEntryDateEl.textContent = t("memoryAgo") + " " + formatDate(tale.entry.createdAt);
+      taleEntryPromptEl.textContent = tale.entry.prompt || "";
+      taleEntryTextEl.textContent = tale.entry.text;
+      taleEntryEl.hidden = false;
+    } else {
+      taleEntryEl.hidden = true;
+    }
+
+    taleNoteEl.textContent = tale.note || "";
+    taleNoteEl.hidden = !tale.note;
+
+    taleNextBtn.textContent = taleQueue.length ? t("taleNext") : t("taleDone");
+    taleOverlayEl.classList.add("open");
+
+    // Воспоминание — тихий момент, салют тут не к месту.
+    petReact(false, false, !!tale.isMemory || !!tale.entry);
+  }
+
+  function closeTale() {
+    taleOverlayEl.classList.remove("open");
+  }
+
+  // Тап по предмету на полянке достаёт запись, вместе с которой он появился.
+  function showDecoMemory(ach) {
+    const entryId = (stats.decoEntries || {})[ach.id];
+    const entry =
+      entryId != null ? entries.find((e) => String(e.id) === String(entryId)) : null;
+    showTale({
+      text: ach.icon + "  " + t("achievements")[ach.id],
+      entry,
+      note: entry ? t("decoFrom") : t("decoMemoryEmpty"),
+    });
+  }
+
   // --- meadow decorations ----------------------------------------------
 
   function depthScale(top) {
@@ -584,14 +861,16 @@
   function renderRoom() {
     roomDecosEl.innerHTML = "";
     for (const ach of visibleDecos()) {
-      const div = document.createElement("div");
-      div.className = "deco";
-      div.style.top = ach.pos.top + "%";
-      div.style.left = ach.pos.left + "%";
-      div.style.setProperty("--deco-scale", depthScale(ach.pos.top).toFixed(3));
-      div.title = t("achievements")[ach.id];
-      div.textContent = ach.icon;
-      roomDecosEl.appendChild(div);
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "deco";
+      btn.style.top = ach.pos.top + "%";
+      btn.style.left = ach.pos.left + "%";
+      btn.style.setProperty("--deco-scale", depthScale(ach.pos.top).toFixed(3));
+      btn.title = t("achievements")[ach.id];
+      btn.textContent = ach.icon;
+      btn.addEventListener("click", () => showDecoMemory(ach));
+      roomDecosEl.appendChild(btn);
     }
   }
 
@@ -849,6 +1128,97 @@
     inventoryPanelEl.classList.remove("open");
   }
 
+  // --- сохранение записей ----------------------------------------------
+  //
+  // Записи живут только в localStorage. Человек ведёт дневник полгода,
+  // чистит данные браузера — и всё исчезает. Поэтому копия обязательна.
+  // JSON нужен, чтобы вернуть всё обратно; txt — чтобы просто перечитать.
+
+  function buildTxt() {
+    if (!entries.length) return "";
+    return entries
+      .map((e) => {
+        const head = formatDate(e.createdAt);
+        const q = e.prompt ? e.prompt + "\n" : "";
+        return head + "\n" + q + e.text + "\n";
+      })
+      .join("\n" + "—".repeat(24) + "\n\n");
+  }
+
+  function buildJson() {
+    return JSON.stringify(
+      { app: "teplo", format: 1, exportedAt: new Date().toISOString(), entries, stats, settings },
+      null,
+      2
+    );
+  }
+
+  function saveFile(text, name, mime) {
+    const blob = new Blob([text], { type: mime + ";charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+  }
+
+  function stamp() {
+    return new Date().toISOString().slice(0, 10);
+  }
+
+  function copyEntries() {
+    const text = buildTxt();
+    if (!text) return;
+    // На айфоне скачивание файла работает коряво — там выручает буфер.
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(
+        () => showToast(t("copied")),
+        () => fallbackCopy(text)
+      );
+    } else {
+      fallbackCopy(text);
+    }
+  }
+
+  function fallbackCopy(text) {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand("copy"); showToast(t("copied")); } catch (e) {}
+    ta.remove();
+  }
+
+  function importFromFile(file) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      let data;
+      try {
+        data = JSON.parse(reader.result);
+      } catch (e) {
+        return showToast(t("importFail"));
+      }
+      if (!data || !Array.isArray(data.entries)) return showToast(t("importFail"));
+      if (!confirm(t("importConfirm"))) return;
+
+      entries = data.entries;
+      if (data.stats) stats = Object.assign(defaultStats(), data.stats);
+      if (data.settings) settings = Object.assign(defaultSettings(), data.settings);
+      saveEntries();
+      saveStats();
+      saveSettings();
+      showToast(t("importOk"));
+      setTimeout(() => location.reload(), 700);
+    };
+    reader.onerror = () => showToast(t("importFail"));
+    reader.readAsText(file);
+  }
+
   // --- forest / onboarding ---------------------------------------------
 
   function buildForest() {
@@ -1009,9 +1379,16 @@
     $("inventory-hint").textContent = t("inventoryHint");
     $("inventory-close").textContent = t("close");
     inventoryBtn.title = t("inventoryTitle");
+    $("export-title").textContent = t("exportTitle");
+    $("export-hint").textContent = t("exportHint");
+    $("export-json").textContent = t("exportJson");
+    $("export-txt").textContent = t("exportTxt");
+    $("export-copy").textContent = t("exportCopy");
+    $("import-btn").textContent = t("importBtn");
     document.querySelectorAll("#lang-mini button").forEach((b) => {
       b.classList.toggle("active", b.dataset.lang === settings.lang);
     });
+    updateTaleBadge();
   }
 
   function setLanguage(lang) {
@@ -1053,7 +1430,33 @@
   });
 
   avatarWrapEl.addEventListener("click", () => {
-    if (settings.onboarded && !settings.started) hatchStart();
+    if (settings.onboarded && !settings.started) return hatchStart();
+    // Тап по питомцу — причина открыть приложение в день, когда писать не хочется.
+    if (taleQueue.length) openNextTale();
+  });
+
+  petBadgeEl.addEventListener("click", (e) => {
+    e.stopPropagation();
+    openNextTale();
+  });
+
+  taleNextBtn.addEventListener("click", () => {
+    closeTale();
+    if (taleQueue.length) setTimeout(openNextTale, 260);
+  });
+
+  taleOverlayEl.addEventListener("click", (e) => {
+    if (e.target === taleOverlayEl) closeTale();
+  });
+
+  $("export-json").addEventListener("click", () => saveFile(buildJson(), `teplo-${stamp()}.json`, "application/json"));
+  $("export-txt").addEventListener("click", () => saveFile(buildTxt(), `teplo-${stamp()}.txt`, "text/plain"));
+  $("export-copy").addEventListener("click", copyEntries);
+  $("import-btn").addEventListener("click", () => importFileEl.click());
+  importFileEl.addEventListener("change", () => {
+    const file = importFileEl.files && importFileEl.files[0];
+    if (file) importFromFile(file);
+    importFileEl.value = "";
   });
 
   inventoryBtn.addEventListener("click", openInventory);
@@ -1099,7 +1502,10 @@
     const previous = entries.length ? entries[entries.length - 1] : null;
     const now = new Date().toISOString();
 
-    entries.push({ id: Date.now(), text, prompt: currentPrompt, createdAt: now, ingredient: ingredient.emoji });
+    const entry = { id: Date.now(), text, prompt: currentPrompt, createdAt: now, ingredient: ingredient.emoji };
+    // Пометка нужна, чтобы такие записи никогда не всплыли в «а помнишь?».
+    if (softMode) entry.soft = true;
+    entries.push(entry);
     saveEntries();
 
     stats.lifetimeEntries += 1;
@@ -1114,6 +1520,10 @@
 
     const justHatched = updateHatchStatus() || (!wasHatched && stats.hatched);
     const newlyUnlocked = computeNewlyUnlocked();
+    // Предмет запоминает запись, вместе с которой появился: тап по нему
+    // на полянке потом достанет её обратно.
+    if (!stats.decoEntries) stats.decoEntries = {};
+    for (const ach of newlyUnlocked) stats.decoEntries[ach.id] = entry.id;
     saveStats();
 
     const grew = stats.hatched && getStage(stats.lifetimeEntries).min !== prevStage.min;
@@ -1139,8 +1549,12 @@
   buildForest();
   applyLanguage();
 
+  // Разрыв считаем до того, как отметиться о заходе.
+  const gapDays = stats.lastVisit ? daysSince(stats.lastVisit) : 0;
+  stats.lastVisit = new Date().toISOString();
+
   const justHatchedOnLoad = updateHatchStatus();
-  if (justHatchedOnLoad) saveStats();
+  saveStats();
 
   renderAvatar(justHatchedOnLoad, false);
   renderRoom();
@@ -1162,4 +1576,6 @@
     renderMessage(justHatchedOnLoad);
     if (justHatchedOnLoad) showToast(t("hatchToast"));
   }
+
+  buildTaleQueue(gapDays);
 })();
