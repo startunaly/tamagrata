@@ -59,9 +59,6 @@
       placeholder: "Можно одну строчку, можно много — как захочется...",
       otherQuestion: "Другой вопрос",
       thank: "Поблагодарить",
-      hardDay: "сегодня тяжёлый день",
-      hardDayBack: "вернуться к обычным вопросам",
-      saveSoft: "Записать",
       remove: "убрать",
       confirmRemove: "Убрать эту запись из дневника? Питомец и полянка не изменятся — они помнят всё, что ты уже написал.",
       eggName: "Яйцо",
@@ -96,12 +93,14 @@
         "all-prompts": "Фонарик",
         "comeback": "Уютное кресло",
       },
+      // Только благодарность, тепло и любовь. Вопросы, зовущие рассказать
+      // о плохом, тянут в пережёвывание — и уводят приложение не туда.
       prompts: [
         "За что ты сегодня благодарен?",
         "Что сегодня заставило тебя улыбнуться?",
         "Был ли кто-то добр к тебе на этой неделе?",
         "Какая мелочь порадовала тебя сегодня?",
-        "За какую часть своего дня ты благодарен, даже если день был трудным?",
+        "За какую часть сегодняшнего дня ты благодарен?",
         "Что в твоей жизни прямо сейчас кажется надёжным?",
         "Какой момент тишины или покоя у тебя был недавно?",
         "Кому ты хотел бы сказать спасибо?",
@@ -109,17 +108,12 @@
         "Сделало ли твоё тело сегодня что-то для тебя — пусть самое обычное?",
         "Какое место дарит тебе спокойствие?",
         "Какую свою черту характера ты сегодня ценишь?",
-      ],
-      // Вопросы для тяжёлого дня. Не требуют найти хорошее и не подводят
-      // к благодарности — только назвать то, что есть, и отнестись к себе мягче.
-      softPrompts: [
-        "Что сегодня было тяжёлым? Можно просто назвать это.",
-        "Если бы рядом был друг, уставший так же, — что бы ты ему сказал?",
-        "Что помогло тебе продержаться сегодня, даже совсем чуть-чуть?",
-        "Что тебе сейчас нужно больше всего?",
-        "Что ты сделал сегодня, хотя было трудно?",
-        "Какая часть тебя сегодня устала сильнее всего?",
-        "О чём ты сейчас не хочешь думать? Можно оставить это здесь.",
+        "Кого тебе было приятно увидеть на этой неделе?",
+        "О ком ты сегодня подумал с теплом?",
+        "Что в твоём доме тебе нравится больше всего?",
+        "Какие слова, сказанные тебе, ты до сих пор помнишь?",
+        "За что ты благодарен себе?",
+        "Что тебя недавно рассмешило?",
       ],
       eggMessages: [
         "Внутри становится теплее.",
@@ -167,13 +161,6 @@
         "Самый вкусный коктейль на свете!",
         "Спасибо, я наелся тепла.",
         "Ух, как вкусно! Спасибо тебе.",
-      ],
-      softMessages: [
-        "Спасибо, что рассказал. Тяжёлый день — это просто тяжёлый день.",
-        "Я посижу рядом. Больше ничего не нужно.",
-        "Ты пришёл, хотя было трудно. Этого достаточно.",
-        "Мне не нужно, чтобы тебе было хорошо. Мне нужно, чтобы ты был.",
-        "Пусть сегодня будет так, как есть.",
       ],
 
       // Питомцу есть что рассказать: значок над головой, тап — карточка.
@@ -245,9 +232,6 @@
       placeholder: "One line is enough, or write more — however you like...",
       otherQuestion: "Another question",
       thank: "Give thanks",
-      hardDay: "today is a hard day",
-      hardDayBack: "back to the usual questions",
-      saveSoft: "Write it down",
       remove: "remove",
       confirmRemove: "Remove this entry from the journal? Your companion and meadow won't change — they remember everything you've written.",
       eggName: "Egg",
@@ -287,7 +271,7 @@
         "What made you smile today?",
         "Was anyone kind to you this week?",
         "What small thing brightened your day?",
-        "What part of your day are you grateful for, even if the day was hard?",
+        "What part of today are you grateful for?",
         "What feels steady in your life right now?",
         "What quiet or peaceful moment have you had recently?",
         "Who would you like to thank?",
@@ -295,17 +279,12 @@
         "Did your body do something for you today — even the most ordinary thing?",
         "What place gives you calm?",
         "Which of your own traits do you appreciate today?",
-      ],
-      // Вопросы для тяжёлого дня. Не требуют найти хорошее и не подводят
-      // к благодарности — только назвать то, что есть, и отнестись к себе мягче.
-      softPrompts: [
-        "What was hard today? You can just name it.",
-        "If a friend were here, as tired as you are — what would you say to them?",
-        "What helped you get through today, even a little?",
-        "What do you need most right now?",
-        "What did you do today even though it was hard?",
-        "Which part of you is most tired today?",
-        "What don't you want to think about right now? You can leave it here.",
+        "Who were you glad to see this week?",
+        "Who did you think of warmly today?",
+        "What do you like most about your home?",
+        "Which words said to you do you still remember?",
+        "What are you grateful to yourself for?",
+        "What made you laugh recently?",
       ],
       eggMessages: [
         "It's getting warmer inside.",
@@ -353,13 +332,6 @@
         "The tastiest drink in the world!",
         "Thank you, I'm full of warmth.",
         "Ooh, delicious! Thank you.",
-      ],
-      softMessages: [
-        "Thank you for telling me. A hard day is just a hard day.",
-        "I'll sit here with you. Nothing else is needed.",
-        "You came, even though it was hard. That's enough.",
-        "I don't need you to feel good. I just want you here.",
-        "Let today be exactly as it is.",
       ],
 
       taleNext: "next",
@@ -433,7 +405,6 @@
   const promptLabel = $("prompt-label");
   const newPromptBtn = $("new-prompt-btn");
   const saveBtn = $("save-btn");
-  const hardDayBtn = $("hard-day-btn");
   const entryInput = $("entry-input");
   const entriesListEl = $("entries-list");
   const emptyStateEl = $("empty-state");
@@ -476,10 +447,7 @@
   let reactionRevertTimer = null;
   let messageOverrideUntil = 0;
   let onboardingStep = 0;
-  // Режим тяжёлого дня намеренно не сохраняется: завтра день может быть другим,
-  // и приложение не должно решать это за человека заранее.
-  let softMode = false;
-  const bags = { prompts: [], softPrompts: [] };
+  const bags = { prompts: [] };
 
   function t(key) {
     return I18N[settings.lang][key];
@@ -569,9 +537,8 @@
   }
 
   function nextPrompt() {
-    const key = softMode ? "softPrompts" : "prompts";
-    if (bags[key].length === 0) refillBag(key, currentPrompt);
-    return bags[key].pop();
+    if (bags.prompts.length === 0) refillBag("prompts", currentPrompt);
+    return bags.prompts.pop();
   }
 
   function pick(list) {
@@ -742,8 +709,9 @@
     return taleBag.pop();
   }
 
-  // Записи тяжёлого дня сюда не попадают никогда: бодрое «а помнишь?»
-  // с вытащенной записью про тяжёлое — это ковыряние в ране без спроса.
+  // Ветки тяжёлого дня в приложении больше нет, но у тех, кто успел ей
+  // воспользоваться, такие записи лежат в дневнике с пометкой soft.
+  // Вытаскивать их в «а помнишь?» нельзя — это ковыряние в ране без спроса.
   function eligibleMemories() {
     const old = entries.filter(
       (e) => !e.soft && daysSince(e.createdAt) >= MEMORY_MIN_AGE_DAYS
@@ -950,9 +918,6 @@
       const full = (stats.glass || []).length >= GLASS_SIZE;
       if (full) {
         drinkCocktail(skipBounce);
-      } else if (softMode) {
-        sayFor(pick(t("softMessages")), 6000);
-        petReact(skipBounce, false, true);
       } else {
         sayFor(pick(t("sipMessages")), 4000);
         petReact(skipBounce, false);
@@ -974,10 +939,9 @@
       stats.glass = [];
       saveStats();
       renderGlass();
-      sayFor(pick(t(softMode ? "softMessages" : "drinkMessages")), 6000);
-      petReact(skipBounce, true, softMode);
-      // В тяжёлый день восклицательный тост звучал бы глухо к тому, что человек написал.
-      if (!softMode) showToast(t("cocktailReady"));
+      sayFor(pick(t("drinkMessages")), 6000);
+      petReact(skipBounce, true);
+      showToast(t("cocktailReady"));
     }, 750);
 
     setTimeout(() => {
@@ -988,7 +952,7 @@
   const REACTION_EMOJIS = ["✨", "💫", "⭐"];
   const CELEBRATION_EMOJIS = ["✨", "💖", "⭐", "🌟", "💫"];
 
-  // calm — режим тяжёлого дня: питомец радуется тише, без салюта.
+  // calm — тихая реакция без салюта: воспоминание не повод для фейерверка.
   function petReact(skipBounce, big, calm) {
     if (!skipBounce) {
       avatarEl.classList.remove("happy-bounce");
@@ -1076,14 +1040,6 @@
   function setPrompt(text) {
     currentPrompt = text;
     promptLabel.textContent = text;
-  }
-
-  function setSoftMode(on) {
-    softMode = on;
-    dockJournalEl.classList.toggle("soft", on);
-    hardDayBtn.textContent = on ? t("hardDayBack") : t("hardDay");
-    saveBtn.textContent = on ? t("saveSoft") : t("thank");
-    setPrompt(nextPrompt());
   }
 
   // --- inventory -------------------------------------------------------
@@ -1373,8 +1329,7 @@
     emptyStateEl.textContent = t("emptyState");
     entryInput.placeholder = t("placeholder");
     newPromptBtn.textContent = t("otherQuestion");
-    saveBtn.textContent = softMode ? t("saveSoft") : t("thank");
-    hardDayBtn.textContent = softMode ? t("hardDayBack") : t("hardDay");
+    saveBtn.textContent = t("thank");
     $("inventory-title").textContent = t("inventoryTitle");
     $("inventory-hint").textContent = t("inventoryHint");
     $("inventory-close").textContent = t("close");
@@ -1395,7 +1350,6 @@
     settings.lang = lang;
     saveSettings();
     bags.prompts = [];
-    bags.softPrompts = [];
     applyLanguage();
     setPrompt(nextPrompt());
     renderAvatar(false, false);
@@ -1475,7 +1429,6 @@
       saveSettings();
       applyLanguage();
       bags.prompts = [];
-      bags.softPrompts = [];
       setPrompt(nextPrompt());
       langScreenEl.classList.add("hidden");
       startOnboarding();
@@ -1483,8 +1436,6 @@
   });
 
   newPromptBtn.addEventListener("click", () => setPrompt(nextPrompt()));
-
-  hardDayBtn.addEventListener("click", () => setSoftMode(!softMode));
 
   saveBtn.addEventListener("click", () => {
     const text = entryInput.value.trim();
@@ -1503,17 +1454,13 @@
     const now = new Date().toISOString();
 
     const entry = { id: Date.now(), text, prompt: currentPrompt, createdAt: now, ingredient: ingredient.emoji };
-    // Пометка нужна, чтобы такие записи никогда не всплыли в «а помнишь?».
-    if (softMode) entry.soft = true;
     entries.push(entry);
     saveEntries();
 
     stats.lifetimeEntries += 1;
     const words = countWords(text);
     if (words > stats.maxWordsInEntry) stats.maxWordsInEntry = words;
-    // Вопросы тяжёлого дня не идут в зачёт ачивки «все вопросы» — она считается
-    // от длины обычного списка, иначе разблокировалась бы раньше времени.
-    if (!softMode && !stats.promptsAnswered.includes(currentPrompt)) stats.promptsAnswered.push(currentPrompt);
+    if (!stats.promptsAnswered.includes(currentPrompt)) stats.promptsAnswered.push(currentPrompt);
     if (previous && diffDaysBetween(previous.createdAt, now) >= 7) stats.hadComeback = true;
 
     stats.glass = [...(stats.glass || []), { emoji: ingredient.emoji, color: ingredient.color }].slice(-GLASS_SIZE);

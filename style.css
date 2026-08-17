@@ -1329,36 +1329,6 @@ body.journal-tab .inventory-btn {
   opacity: 0.85;
 }
 
-/* --- тяжёлый день --- */
-
-/* Намеренно тихая: это выход для того, кому он нужен, а не призыв. */
-.hard-day-btn {
-  align-self: center;
-  margin-top: 2px;
-  padding: 3px 8px;
-  border: none;
-  background: none;
-  font-family: inherit;
-  font-size: 0.72rem;
-  color: var(--ink-soft);
-  opacity: 0.72;
-  cursor: pointer;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  text-decoration-color: rgba(120, 155, 165, 0.4);
-  transition: opacity 0.2s ease;
-}
-
-.hard-day-btn:hover { opacity: 1; }
-
-/* В мягком режиме док теплеет и теряет бодрый блик. */
-.dock-journal.soft .prompt { font-weight: 600; }
-
-.dock-journal.soft .hard-day-btn {
-  opacity: 0.9;
-  text-decoration-color: rgba(120, 155, 165, 0.7);
-}
-
 /* --- рассказы питомца --- */
 
 /* Значок над головой: единственное приглашение, никакого таймера и сгорания. */
