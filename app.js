@@ -168,34 +168,40 @@
       taleDone: "спасибо",
       taleBadge: "У питомца есть что рассказать",
 
-      // ЗАГОТОВКИ — их стоит переписать своим голосом.
-      // Массив по стадиям питомца (0–4): чем старше, тем взрослее речь.
-      // Внутри стадии истории берутся случайно, без повторов подряд.
+      // Яйцо ещё не вылупилось: мир только на слух и на ощупь.
+      eggTales: [
+        "Интересно... Как же выглядит мир снаружи? Мне он кажется очень большим. И ярко-жёлтого цвета!",
+        "Как любопытно... Что-то всё время шуршит. Это я у тебя в кармане?",
+        "Я иногда чувствую от тебя тепло. Благодарность. Это чувство меня делает сильнее.",
+      ],
+
+      // По стадиям вылупившегося питомца (0–4): чем старше, тем взрослее речь.
+      // Внутри стадии истории идут вперемешку, без повторов подряд.
       awayTales: [
         [
-          "Пока тебя не было, я нашёл камень. Просто камень, но тёплый.",
-          "Я смотрел, как по травинке ползёт кто-то маленький. Долго смотрел.",
-          "Тут был ветер. Я сидел и слушал, как он проходит через траву.",
+          "Представляешь... Пока я ждал тебя тут на поляне, пошёл сильный дождь. Я весь промок и не знал куда спрятаться. Но затем дождь постепенно закончился... И там за тучами выглянуло солнышко! И потом радуга! Такая большая и красивая радуга! Это стоило того, чтобы промокнуть под дождём.",
+          "Иногда я тут сплю, пока я тебя жду, и мне снятся сны. Вчера снилась клубничная ракета. Сегодня апельсиновая машинка. А однажды мне приснился ягодный самолёт! Интересно, такое бывает?",
+          "Пока я тебя ждал, я сочинил стих. Кхм, кхм! Милые клубнички под солнцем, мягкие булочки в печке, а я сижу на травинке! Ну как? Хорошо? У меня получилось?",
         ],
         [
-          "Я познакомился с жуком. Он важный, живёт под камнем и всё время занят.",
-          "Возле пруда днём светлее, чем кажется утром. Я проверил.",
-          "Слышал, как что-то шуршало в траве. Мы друг друга не испугались.",
+          "Я нашёл тут тропинку! Пошёл по ней и... она привела меня обратно сюда же. Оказывается, наша полянка круглая! Я проверил дважды, чтобы точно.",
+          "Я считал облака. Одно было похоже на булочку, другое на кота, а третье вообще ни на что не похоже — но оно было самое красивое. Как думаешь, облакам обидно, когда их ни с чем не сравнивают?",
+          "Я решил научиться свистеть. Пока получается только «пфффф». Но я тренируюсь каждый день! Скоро я тебе просвищу целую песню, вот увидишь.",
         ],
         [
-          "Я обошёл всю полянку по краю. Она больше, чем выглядит.",
-          "Пруд утром совсем другого цвета. Хотел показать, но ты спал, наверное.",
-          "Приходила птица, посидела рядом и улетела. Мы помолчали вместе.",
+          "Я подружился с жуком! Его зовут... ну, я зову его Жук, он не возражает. Он живёт под тем камнем и всё время куда-то спешит. Я спросил куда — он не сказал. Наверное, это секрет.",
+          "Ночью тут загораются звёзды. Много-много! Я пробовал сосчитать, дошёл до двадцати и сбился. Начал заново — опять сбился. Кажется, их правда очень много.",
+          "Я построил домик из веточек! Он маленький и немножко кривой, и в него никто не помещается, даже я. Но зато он мой. И вообще, он для жука.",
         ],
         [
-          "Я сидел у воды и думал о том, сколько всего ты уже написал.",
-          "Иногда я просто смотрю на вещи, которые у нас появились, и вспоминаю.",
-          "Ночью тут тихо и совсем не страшно. Я проверил, чтобы ты знал.",
+          "Я обошёл всю полянку по краю. Она больше, чем кажется! И знаешь, что я заметил? Вон те цветы у пруда — их раньше не было. Они выросли, пока мы с тобой тут были.",
+          "Утром вода в пруду розовая, днём голубая, а вечером совсем золотая. Я специально проверял в разное время. Одна и та же вода — а каждый раз другая. Как так?",
+          "Я смотрел на наши вещи и вспоминал, откуда каждая. Вот это появилось, когда ты написал про маму. А это — когда про дождь. Получается, полянка помнит всё, что ты рассказывал.",
         ],
         [
-          "Я долго сидел на самом высоком месте и смотрел вдаль. Там тоже хорошо.",
-          "Мне кажется, полянка запоминает всё, что тут было. Как и я.",
-          "Я успел соскучиться, но это было спокойное скучание. Хорошее.",
+          "Я сидел на самом высоком месте и смотрел вдаль. Там, за деревьями, тоже что-то есть — другие полянки, наверное, и другие деревья. Но мне нравится наша. Я бы не поменял.",
+          "Знаешь, я заметил интересное. Когда ты пишешь про хорошее, оно как будто становится немножко больше. Не само по себе — а в тебе. Я это чувствую отсюда.",
+          "Иногда я думаю: я ведь вырос из того яйца, которое ничего не знало о мире. А теперь у меня есть полянка, пруд, жук и ты. Это всё случилось просто потому, что ты приходил. Спасибо тебе.",
         ],
       ],
 
@@ -338,31 +344,37 @@
       taleDone: "thank you",
       taleBadge: "Your companion has something to tell you",
 
+      eggTales: [
+        "I wonder... What does the world outside look like? It feels very big to me. And bright yellow!",
+        "How curious... Something keeps rustling. Am I in your pocket?",
+        "Sometimes I feel warmth coming from you. Gratitude. That feeling makes me stronger.",
+      ],
+
       awayTales: [
         [
-          "While you were away, I found a stone. Just a stone, but warm.",
-          "I watched something tiny crawl along a blade of grass. For a long while.",
-          "There was wind here. I sat and listened to it move through the grass.",
+          "Guess what... While I was waiting for you here in the meadow, it started pouring. I got soaked through and didn't know where to hide. But then the rain slowly stopped... And the sun came out from behind the clouds! And then a rainbow! Such a big, beautiful rainbow! It was worth getting soaked for.",
+          "Sometimes I sleep here while I wait for you, and I have dreams. Yesterday I dreamt of a strawberry rocket. Today, an orange car. And once I dreamt of a berry aeroplane! Do you think that happens?",
+          "While I was waiting, I made up a poem. Ahem, ahem! Sweet little strawberries under the sun, soft little buns in the oven, and me on a blade of grass! Well? Was it good? Did I do it right?",
         ],
         [
-          "I met a beetle. Very important, lives under a stone, always busy.",
-          "By the pond it's brighter at noon than it looks in the morning. I checked.",
-          "Something rustled in the grass. Neither of us was frightened.",
+          "I found a path! I followed it and... it led me right back here. It turns out our meadow is round! I checked twice, just to be sure.",
+          "I counted the clouds. One looked like a bun, another like a cat, and the third didn't look like anything at all — but it was the prettiest one. Do you think clouds mind when nobody compares them to something?",
+          "I've decided to learn to whistle. So far all I manage is «pfffff». But I practise every day! Soon I'll whistle you a whole song, you'll see.",
         ],
         [
-          "I walked the whole edge of the meadow. It's bigger than it looks.",
-          "The pond is a different colour in the morning. I wanted to show you.",
-          "A bird came, sat nearby, and left. We were quiet together.",
+          "I made friends with a beetle! His name is... well, I call him Beetle, he doesn't mind. He lives under that stone and is always hurrying somewhere. I asked where — he wouldn't say. It must be a secret.",
+          "At night the stars come out here. So many! I tried to count them, got to twenty and lost my place. Started again — lost it again. I think there really are a lot of them.",
+          "I built a little house out of twigs! It's small and a bit crooked, and nobody fits inside, not even me. But it's mine. And anyway, it's for the beetle.",
         ],
         [
-          "I sat by the water thinking about how much you've written by now.",
-          "Sometimes I just look at the things we've gathered and remember.",
-          "It's quiet here at night, and not frightening at all. I checked, so you'd know.",
+          "I walked the whole edge of the meadow. It's bigger than it looks! And do you know what I noticed? Those flowers by the pond — they weren't there before. They grew while you and I were here.",
+          "In the morning the pond is pink, at noon it's blue, and in the evening it turns all golden. I checked at different times on purpose. The same water — different every time. How does it do that?",
+          "I was looking at our things and remembering where each one came from. This one appeared when you wrote about your mum. And this one — when you wrote about the rain. So the meadow remembers everything you've told it.",
         ],
         [
-          "I sat on the highest spot for a long time, looking far off. It's good there too.",
-          "I think the meadow remembers everything that happened here. Like I do.",
-          "I did miss you, but it was a calm sort of missing. A good one.",
+          "I sat on the highest spot and looked far off. There's something out there beyond the trees too — other meadows, probably, and other trees. But I like ours. I wouldn't trade it.",
+          "You know, I noticed something interesting. When you write about good things, they seem to grow a little bigger. Not on their own — inside you. I can feel it from here.",
+          "Sometimes I think: I grew out of that egg that knew nothing about the world. And now I have a meadow, a pond, a beetle, and you. All of it happened simply because you kept coming. Thank you.",
         ],
       ],
 
@@ -696,11 +708,13 @@
     return 1;
   }
 
+  // idx === -1 — яйцо: у него свой набор, мир пока только на слух.
   function nextAwayTale(idx) {
     if (taleBagStage !== idx || taleBag.length === 0) {
       taleBagStage = idx;
       const all = t("awayTales");
-      taleBag = [...(all[idx] || all[0] || [])];
+      const list = idx < 0 ? t("eggTales") : all[idx] || all[0] || [];
+      taleBag = [...list];
       for (let i = taleBag.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [taleBag[i], taleBag[j]] = [taleBag[j], taleBag[i]];
@@ -723,10 +737,10 @@
 
   function buildTaleQueue(gapDays) {
     taleQueue = [];
-    if (!stats.hatched || !settings.started) return updateTaleBadge();
+    if (!settings.started) return updateTaleBadge();
 
     if (gapDays >= AWAY_MIN_GAP_DAYS) {
-      const idx = stageIndex();
+      const idx = stats.hatched ? stageIndex() : -1;
       const count = awayTaleCount(gapDays);
       for (let i = 0; i < count; i++) {
         const text = nextAwayTale(idx);
