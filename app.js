@@ -64,6 +64,10 @@
       eggName: "Яйцо",
       defaultPetName: "Искорка",
       hatchToast: "🐣 Кто-то только что вылупился!",
+      hatchCeremony: "Твоё тепло помогло вылупиться питомцу!",
+      nameTitle: "Назови питомца",
+      nameWarn: "Имя потом нельзя будет поменять",
+      nameSave: "Готово",
       newOnMeadow: "Новое на полянке",
       tapEgg: "Тапни по яйцу",
       inventoryTitle: "Инвентарь",
@@ -241,6 +245,10 @@
       eggName: "Egg",
       defaultPetName: "Spark",
       hatchToast: "🐣 Someone just hatched!",
+      hatchCeremony: "Your warmth helped someone hatch!",
+      nameTitle: "Name your companion",
+      nameWarn: "The name can't be changed later",
+      nameSave: "Done",
       newOnMeadow: "New in the meadow",
       tapEgg: "Tap the egg",
       inventoryTitle: "Your things",
@@ -447,6 +455,11 @@
   const taleEntryTextEl = $("tale-entry-text");
   const taleNoteEl = $("tale-note");
   const importFileEl = $("import-file");
+  const hatchEl = $("hatch");
+  const hatchMessageEl = $("hatch-message");
+  const hatchPetEl = $("hatch-pet");
+  const hatchNameFormEl = $("hatch-name");
+  const hatchNameInputEl = $("hatch-name-input");
 
   let entries = loadEntries();
   let stats = loadStats();
@@ -585,6 +598,9 @@
     if (stats.hatched) return false;
     if (stats.lifetimeEntries >= HATCH_ENTRIES_THRESHOLD || daysSince(stats.firstOpenDate) >= HATCH_DAYS_THRESHOLD) {
       stats.hatched = true;
+      // Явный false, а не отсутствие поля: по нему отличается свежее
+      // вылупление от тех, кто вылупился до появления церемонии.
+      stats.petNamed = false;
       return true;
     }
     return false;
@@ -637,7 +653,9 @@
     }
 
     const stage = getStage(stats.lifetimeEntries);
-    nameInputEl.readOnly = false;
+    // Имя дано один раз — поле только для чтения. У тех, кто вылупился
+    // до церемонии, petNamed нет, и переименование им остаётся.
+    nameInputEl.readOnly = !!stats.petNamed;
     nameInputEl.value = petName();
     glowEl.style.setProperty("--glow-color", stage.glow);
     setAvatarImage(stage.idle);
@@ -648,6 +666,98 @@
       void avatarEl.offsetWidth;
       avatarEl.classList.add(justHatched ? "hatch-pop" : "pulse-grow");
     }
+  }
+
+  // --- вылупление -------------------------------------------------------
+  //
+  // Разовое событие, поэтому оно занимает весь экран и идёт по шагам:
+  // яйцо трясётся → белая вспышка → сообщение → питомец проступает из
+  // прозрачности → имя. Имя даётся один раз и навсегда: необратимость
+  // здесь смысловая, из неё берётся привязанность.
+  //
+  // Если человек закроет приложение посреди церемонии, `petNamed: false`
+  // останется в хранилище и на следующем открытии сразу покажется шаг имени.
+
+  let hatchTimers = [];
+
+  function clearHatchTimers() {
+    hatchTimers.forEach(clearTimeout);
+    hatchTimers = [];
+  }
+
+  function later(ms, fn) {
+    hatchTimers.push(setTimeout(fn, ms));
+  }
+
+  function startHatchCeremony(fromEgg) {
+    clearHatchTimers();
+
+    hatchMessageEl.textContent = t("hatchCeremony");
+    $("hatch-name-label").textContent = t("nameTitle");
+    $("hatch-name-warn").textContent = t("nameWarn");
+    $("hatch-name-btn").textContent = t("nameSave");
+    hatchNameInputEl.value = "";
+    hatchNameInputEl.placeholder = t("defaultPetName");
+
+    // Кадр ставим заранее: иначе при появлении дёрнется раскладка.
+    hatchPetEl.src = getStage(stats.lifetimeEntries).idle;
+
+    hatchEl.className = "hatch";
+    hatchEl.hidden = false;
+
+    if (!fromEgg) return void showNamingOnly();
+
+    // 1. яйцо трескается
+    avatarEl.classList.add("cracking");
+    setAvatarImage(EGG_IMAGES[1]);
+    later(420, () => setAvatarImage(EGG_IMAGES[2]));
+
+    // 2. вспышка
+    later(900, () => {
+      avatarEl.classList.remove("cracking");
+      requestAnimationFrame(() => hatchEl.classList.add("flash"));
+    });
+
+    // 3. сообщение
+    later(1500, () => hatchEl.classList.add("show-message"));
+    later(4300, () => hatchEl.classList.remove("show-message"));
+
+    // 4. питомец проступает
+    later(4900, () => hatchEl.classList.add("show-pet"));
+
+    // 5. имя
+    later(6300, () => {
+      hatchEl.classList.add("show-name");
+      hatchNameInputEl.focus();
+    });
+  }
+
+  // Возврат к недоназванному питомцу: без вспышки и без сообщения.
+  function showNamingOnly() {
+    hatchEl.classList.add("flash", "show-pet");
+    later(500, () => {
+      hatchEl.classList.add("show-name");
+      hatchNameInputEl.focus();
+    });
+  }
+
+  function finishNaming() {
+    const value = hatchNameInputEl.value.trim().slice(0, 24);
+    stats.petName = value || t("defaultPetName");
+    stats.petNamed = true;
+    saveStats();
+
+    clearHatchTimers();
+    hatchEl.classList.add("leaving");
+    later(700, () => {
+      hatchEl.hidden = true;
+      hatchEl.className = "hatch";
+      renderAvatar(false, false);
+      renderRoom();
+      renderGlass();
+      startMessageCycle();
+      spawnParticles(7, CELEBRATION_EMOJIS);
+    });
   }
 
   // --- messages --------------------------------------------------------
@@ -664,14 +774,33 @@
     else messageEl.textContent = pick(t("longAgoMessages"));
   }
 
+  // Реплики держатся две минуты и на две минуты уходят. Раньше текст
+  // менялся каждые девять секунд — питомец тараторил и читать его не успевали.
+  // Прячется только сама реплика: имя остаётся, иначе питомец теряет лицо.
+  const MESSAGE_SHOWN_MS = 2 * 60 * 1000;
+  const MESSAGE_QUIET_MS = 2 * 60 * 1000;
+
   function sayFor(text, ms) {
     messageEl.textContent = text;
     messageOverrideUntil = Date.now() + ms;
+    petSpeechEl.classList.remove("quiet");
+    // Реакция перебивает паузу, а после неё цикл начинается заново.
+    clearTimeout(messageTimer);
+    messageTimer = setTimeout(startMessageCycle, ms);
+  }
+
+  function startMessageCycle() {
+    clearTimeout(messageTimer);
+    renderMessage(false);
+    petSpeechEl.classList.remove("quiet");
+    messageTimer = setTimeout(() => {
+      petSpeechEl.classList.add("quiet");
+      messageTimer = setTimeout(startMessageCycle, MESSAGE_QUIET_MS);
+    }, MESSAGE_SHOWN_MS);
   }
 
   function restartMessageRotation() {
-    if (messageTimer) clearInterval(messageTimer);
-    messageTimer = setInterval(() => renderMessage(false), 9000);
+    startMessageCycle();
   }
 
   // --- время суток ------------------------------------------------------
@@ -1535,6 +1664,8 @@
   });
 
   nameInputEl.addEventListener("blur", () => {
+    // Имя уже дано — что бы ни оказалось в поле, возвращаем настоящее.
+    if (stats.petNamed) return void (nameInputEl.value = petName());
     if (!stats.hatched) return;
     const value = nameInputEl.value.trim().slice(0, 24);
     stats.petName = value || stats.petName || t("defaultPetName");
@@ -1612,6 +1743,11 @@
 
   newPromptBtn.addEventListener("click", () => setPrompt(nextPrompt()));
 
+  hatchNameFormEl.addEventListener("submit", (e) => {
+    e.preventDefault();
+    finishNaming();
+  });
+
   saveBtn.addEventListener("click", () => {
     const text = entryInput.value.trim();
     if (!text) {
@@ -1660,10 +1796,13 @@
 
     serveDrink(ingredient, fromRect, justHatched || grew);
 
-    if (justHatched) showToast(t("hatchToast"));
     for (const ach of newlyUnlocked) {
       showToast(`${ach.icon} ${t("newOnMeadow")}: ${t("achievements")[ach.id]}`);
     }
+
+    // Церемония последней: она перекрывает экран, и всё остальное к этому
+    // моменту уже посчитано и сохранено.
+    if (justHatched) startHatchCeremony(true);
   });
 
   // --- init ------------------------------------------------------------
@@ -1682,6 +1821,16 @@
   // Разрыв считаем до того, как отметиться о заходе.
   const gapDays = stats.lastVisit ? daysSince(stats.lastVisit) : 0;
   stats.lastVisit = new Date().toISOString();
+
+  // У вылупившихся до церемонии поля нет вовсе. Кто имя уже выбрал — тот
+  // выбрал, запираем. Кому выбрать не предлагали (имя по умолчанию) —
+  // покажем шаг имени: запереть человека на «Искорке» без единого вопроса
+  // хуже, чем показать окно один раз.
+  // Проставить нужно до updateHatchStatus, иначе свежее вылупление,
+  // у которого petNamed выставляется в false, угодит под ту же гребёнку.
+  if (stats.hatched && stats.petNamed === undefined) {
+    stats.petNamed = !!stats.petName;
+  }
 
   const justHatchedOnLoad = updateHatchStatus();
   saveStats();
@@ -1704,7 +1853,12 @@
   } else {
     setDockMode("journal");
     renderMessage(justHatchedOnLoad);
-    if (justHatchedOnLoad) showToast(t("hatchToast"));
+    if (justHatchedOnLoad) {
+      startHatchCeremony(true);
+    } else if (stats.petNamed === false) {
+      // Церемонию прервали на середине — возвращаемся сразу к имени.
+      startHatchCeremony(false);
+    }
   }
 
   buildTaleQueue(gapDays);

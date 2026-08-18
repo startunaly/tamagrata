@@ -610,6 +610,20 @@ body {
   color: var(--scene-ink-soft);
   font-size: clamp(0.7rem, 2.8vw, 0.82rem);
   line-height: 1.35;
+  transition: opacity 0.6s ease;
+}
+
+/* Тихая фаза: реплика уходит, пузырь сжимается до имени. */
+.pet-speech.quiet .companion-message {
+  display: none;
+}
+
+.pet-speech {
+  transition: padding 0.4s ease;
+}
+
+.pet-speech.quiet {
+  padding-bottom: 6px;
 }
 
 .avatar-wrap {
@@ -1610,6 +1624,145 @@ body.journal-tab .inventory-btn {
 :root[data-daytime="night"] .pet-badge {
   border-color: rgba(255, 255, 255, 0.75);
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+/* --- вылупление ---------------------------------------------------------
+
+   Момент разовый, и он должен читаться как событие: яйцо трясётся, экран
+   заливает белым, появляется сообщение, потом из прозрачности проступает
+   питомец, и только затем — имя. Белый фон здесь намеренный, поэтому цвета
+   заданы явно, а не через переменные темы: на белом нужен тёмный текст
+   независимо от того, что стоит в системе.                                */
+
+.hatch {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 28px 24px;
+  background: #fffdf8;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+}
+
+.hatch.flash { opacity: 1; }
+
+.hatch.leaving {
+  opacity: 0;
+  transition: opacity 0.7s ease;
+}
+
+.hatch-top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 132px;
+  justify-content: flex-end;
+}
+
+.hatch-message {
+  margin: 0;
+  max-width: 320px;
+  text-align: center;
+  font-size: clamp(1rem, 4.4vw, 1.22rem);
+  font-weight: 700;
+  line-height: 1.4;
+  color: #2f4a55;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.hatch.show-message .hatch-message {
+  opacity: 1;
+  transform: none;
+}
+
+.hatch-pet {
+  width: min(58vw, 236px);
+  opacity: 0;
+  transform: scale(0.94);
+  transition: opacity 1.3s ease, transform 1.3s ease;
+}
+
+.hatch.show-pet .hatch-pet {
+  opacity: 1;
+  transform: none;
+}
+
+.hatch-name {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+  width: min(92vw, 320px);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.hatch.show-name .hatch-name {
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
+}
+
+.hatch-name-label {
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: #2f4a55;
+}
+
+.hatch-name-input {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(120, 165, 180, 0.5);
+  background: #fff;
+  color: #2f4a55;
+  font-family: inherit;
+  font-size: 1rem;
+  text-align: center;
+  outline: none;
+}
+
+.hatch-name-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(79, 195, 217, 0.2);
+}
+
+/* Предупреждение о необратимости — не пугалка, поэтому мелко и спокойно. */
+.hatch-name-warn {
+  margin: 0;
+  text-align: center;
+  font-size: 0.76rem;
+  line-height: 1.35;
+  color: #7b98a3;
+}
+
+.hatch-name .primary-btn { width: 100%; }
+
+/* Яйцо перед вспышкой. */
+@keyframes eggCrack {
+  0%, 100% { transform: rotate(0deg) translateX(0); }
+  14% { transform: rotate(-4deg) translateX(-3px); }
+  28% { transform: rotate(4deg) translateX(3px); }
+  42% { transform: rotate(-5deg) translateX(-4px); }
+  56% { transform: rotate(5deg) translateX(4px); }
+  72% { transform: rotate(-3deg) translateX(-2px); }
+  86% { transform: rotate(3deg) translateX(2px); }
+}
+
+.avatar-img.cracking { animation: eggCrack 0.9s ease-in-out; }
+
+@media (prefers-reduced-motion: reduce) {
+  .avatar-img.cracking { animation: none; }
+  .hatch-pet { transition: opacity 0.4s ease; }
 }
 
 /* --- сохранение записей --- */
