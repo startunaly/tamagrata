@@ -66,12 +66,12 @@
       hatchToast: "🐣 Кто-то только что вылупился!",
       newOnMeadow: "Новое на полянке",
       tapEgg: "Тапни по яйцу",
-      inventoryTitle: "Твои вещи",
+      inventoryTitle: "Инвентарь",
       inventoryHint: "Нажми на вещь, чтобы убрать её с полянки или вернуть обратно.",
       inventoryEmpty: "Пока пусто. Вещи появятся сами, пока ты пишешь.",
       close: "Готово",
-      ingredientAdded: "добавлено в коктейль",
-      cocktailReady: "🥤 Коктейль готов — питомец пьёт!",
+      ingredientAdded: "добавлено в напиток",
+      cocktailReady: "🥤 Напиток готов — питомец пьёт!",
       onbQuotes: [
         "Иногда кажется, что ты заблудился, как будто в лесу.",
         "Кажется, что ты сделал неправильный выбор.",
@@ -155,10 +155,10 @@
       sipMessages: [
         "Ммм, пахнет вкусно!",
         "Какой хороший ингредиент.",
-        "Это отправится в коктейль.",
+        "Это отправится в напиток.",
       ],
       drinkMessages: [
-        "Самый вкусный коктейль на свете!",
+        "Самый вкусный напиток на свете!",
         "Спасибо, я наелся тепла.",
         "Ух, как вкусно! Спасибо тебе.",
       ],
@@ -672,6 +672,32 @@
   function restartMessageRotation() {
     if (messageTimer) clearInterval(messageTimer);
     messageTimer = setInterval(() => renderMessage(false), 9000);
+  }
+
+  // --- время суток ------------------------------------------------------
+  //
+  // Сцена идёт по часам устройства. Системная тёмная тема к этому отношения
+  // не имеет — она красит интерфейс, а не полянку. Цвета лежат в CSS,
+  // отсюда только выставляется фаза.
+
+  const DAY_PHASES = [
+    { from: 5, name: "dawn" },
+    { from: 8, name: "day" },
+    { from: 17, name: "dusk" },
+    { from: 20, name: "night" },
+  ];
+
+  function currentDaytime() {
+    const h = new Date().getHours();
+    let phase = "night"; // часы до пяти утра не попадают ни в один порог
+    for (const p of DAY_PHASES) if (h >= p.from) phase = p.name;
+    return phase;
+  }
+
+  function applyDaytime() {
+    const phase = currentDaytime();
+    if (document.documentElement.dataset.daytime === phase) return;
+    document.documentElement.dataset.daytime = phase;
   }
 
   // --- рассказы питомца -------------------------------------------------
@@ -1240,7 +1266,7 @@
 
   function buildJson() {
     return JSON.stringify(
-      { app: "teplo", format: 1, exportedAt: new Date().toISOString(), entries, stats, settings },
+      { app: "tamagrata", format: 1, exportedAt: new Date().toISOString(), entries, stats, settings },
       null,
       2
     );
@@ -1552,8 +1578,8 @@
 
   taleCatcherEl.addEventListener("click", advanceTale);
 
-  $("export-json").addEventListener("click", () => saveFile(buildJson(), `teplo-${stamp()}.json`, "application/json"));
-  $("export-txt").addEventListener("click", () => saveFile(buildTxt(), `teplo-${stamp()}.txt`, "text/plain"));
+  $("export-json").addEventListener("click", () => saveFile(buildJson(), `tamagrata-${stamp()}.json`, "application/json"));
+  $("export-txt").addEventListener("click", () => saveFile(buildTxt(), `tamagrata-${stamp()}.txt`, "text/plain"));
   $("export-copy").addEventListener("click", copyEntries);
   $("import-btn").addEventListener("click", () => importFileEl.click());
   importFileEl.addEventListener("change", () => {
@@ -1644,6 +1670,14 @@
 
   buildForest();
   applyLanguage();
+
+  applyDaytime();
+  // Раз в пять минут — чтобы фаза сменилась у открытого приложения, и при
+  // возвращении к вкладке: телефон мог пролежать в кармане до вечера.
+  setInterval(applyDaytime, 5 * 60 * 1000);
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) applyDaytime();
+  });
 
   // Разрыв считаем до того, как отметиться о заходе.
   const gapDays = stats.lastVisit ? daysSince(stats.lastVisit) : 0;

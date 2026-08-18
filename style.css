@@ -34,19 +34,151 @@
     --card: rgba(255, 255, 255, 0.07);
     --card-border: rgba(255, 255, 255, 0.16);
     --shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-    --sky-top: #10243f;
-    --sky-mid: #17395a;
-    --sky-bottom: #1e4d63;
-    --hill-light: #24564a;
-    --hill-dark: #173b34;
-    --grass-far: #2b5f48;
-    --grass-mid: #1f4a37;
-    --grass-near: #163726;
-    --water-far: #164258;
-    --water-near: #2b7d93;
     --shine: linear-gradient(180deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.04) 45%, rgba(255, 255, 255, 0) 55%);
   }
 }
+
+/* --- время суток --------------------------------------------------------
+
+   Цвета сцены здесь и НЕ в блоке тёмной темы. Раньше небо, холмы, трава и
+   вода переопределялись по prefers-color-scheme, и у человека с тёмной
+   темой в системе полянка была ночной круглые сутки — даже в полдень.
+
+   Разделение такое: системная тема отвечает за интерфейс (карточки, текст,
+   док), время на устройстве — за сцену. Базовые значения в :root — дневные,
+   поэтому если скрипт не отработает, полянка останется светлой.           */
+
+/* Всё, что лежит ПОВЕРХ сцены — реплики, вкладки, подсказки — красится
+   этими переменными, а не общими --ink/--card. Общие принадлежат системной
+   теме и на светлой полянке дают светлый текст по светлому стеклу. */
+:root {
+  --scene-ink: #2f4a55;
+  --scene-ink-soft: #6c8994;
+  --scene-glass: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.62) 100%);
+  --scene-glass-flat: rgba(255, 255, 255, 0.82);
+  --scene-glass-border: rgba(255, 255, 255, 0.9);
+  --scene-tail: rgba(255, 255, 255, 0.72);
+  --scene-halo: rgba(255, 255, 255, 0.6);
+  --scene-inset: rgba(255, 255, 255, 0.6);
+}
+
+:root[data-daytime="night"] {
+  --scene-ink: #e6f4f7;
+  --scene-ink-soft: #a6c4cb;
+  --scene-glass: linear-gradient(180deg, rgba(22, 48, 62, 0.88) 0%, rgba(16, 38, 50, 0.72) 100%);
+  --scene-glass-flat: rgba(18, 42, 54, 0.82);
+  --scene-glass-border: rgba(255, 255, 255, 0.2);
+  --scene-tail: rgba(20, 44, 57, 0.85);
+  --scene-halo: rgba(0, 0, 0, 0.35);
+  --scene-inset: rgba(255, 255, 255, 0.08);
+}
+
+:root[data-daytime="dawn"] {
+  --sky-top: #6f9fd8;
+  --sky-mid: #f2b49f;
+  --sky-bottom: #ffe0c9;
+  --hill-light: #9ccf82;
+  --hill-dark: #5f9f56;
+  --grass-far: #c8e39f;
+  --grass-mid: #8ac95f;
+  --grass-near: #5f9c46;
+  --water-far: #5f9fc4;
+  --water-near: #a8d2e0;
+}
+
+:root[data-daytime="dusk"] {
+  --sky-top: #3f5f9e;
+  --sky-mid: #e8907a;
+  --sky-bottom: #ffd49a;
+  --hill-light: #8fae66;
+  --hill-dark: #52794a;
+  --grass-far: #bcd18a;
+  --grass-mid: #7cab58;
+  --grass-near: #53853e;
+  --water-far: #46789f;
+  --water-near: #cfa07f;
+}
+
+:root[data-daytime="night"] {
+  --sky-top: #0c1a38;
+  --sky-mid: #172f57;
+  --sky-bottom: #2b4772;
+  --hill-light: #2f4c3e;
+  --hill-dark: #1b3227;
+  --grass-far: #3a5540;
+  --grass-mid: #2b4433;
+  --grass-near: #203528;
+  --water-far: #17324f;
+  --water-near: #2e5a7d;
+}
+
+/* Переход между фазами должен быть незаметным, а не рывком.
+   Прозрачность у солнца не трогаем — ею заведует sunPulse. */
+.sky,
+.hill,
+.lake,
+.field,
+.pond,
+.sun {
+  transition: background 1.6s ease;
+}
+
+.cloud,
+.horizon-haze {
+  transition: opacity 1.6s ease;
+}
+
+/* Солнце проходит по небу: на рассвете низко и слева, к закату уходит
+   вправо и краснеет, ночью подменяется маленькой чёткой луной. */
+:root[data-daytime="dawn"] .sun {
+  top: 16%;
+  right: 58%;
+  background: radial-gradient(circle, rgba(255, 240, 220, 0.95) 0%, rgba(255, 201, 172, 0.5) 26%, rgba(255, 190, 160, 0.14) 48%, transparent 70%);
+}
+
+:root[data-daytime="dusk"] .sun {
+  top: 22%;
+  right: 8%;
+  background: radial-gradient(circle, rgba(255, 226, 172, 0.95) 0%, rgba(255, 170, 110, 0.55) 26%, rgba(255, 150, 90, 0.16) 48%, transparent 70%);
+}
+
+:root[data-daytime="night"] .sun {
+  top: 7%;
+  right: 16%;
+  width: 15%;
+  padding-top: 15%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.98) 0%, rgba(226, 238, 255, 0.85) 34%, rgba(180, 205, 255, 0.18) 56%, transparent 72%);
+  animation: none;
+}
+
+/* Звёзды живут в небе всегда, но проявляются только к ночи. */
+.sky::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 28% 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.6s ease;
+  background-image:
+    radial-gradient(1.6px 1.6px at 11% 24%, #fff, transparent),
+    radial-gradient(1.2px 1.2px at 26% 11%, rgba(255, 255, 255, 0.9), transparent),
+    radial-gradient(1.4px 1.4px at 39% 31%, #fff, transparent),
+    radial-gradient(1px 1px at 52% 17%, rgba(255, 255, 255, 0.85), transparent),
+    radial-gradient(1.7px 1.7px at 63% 38%, #fff, transparent),
+    radial-gradient(1.1px 1.1px at 74% 9%, rgba(255, 255, 255, 0.9), transparent),
+    radial-gradient(1.5px 1.5px at 86% 27%, #fff, transparent),
+    radial-gradient(1px 1px at 94% 44%, rgba(255, 255, 255, 0.8), transparent),
+    radial-gradient(1.3px 1.3px at 18% 47%, rgba(255, 255, 255, 0.85), transparent),
+    radial-gradient(1.1px 1.1px at 45% 52%, rgba(255, 255, 255, 0.75), transparent);
+}
+
+:root[data-daytime="night"] .sky::after { opacity: 0.9; }
+:root[data-daytime="dusk"] .sky::after { opacity: 0.32; }
+
+/* Белая дымка и облака ночью выдают себя слишком ярко. */
+:root[data-daytime="night"] .cloud { opacity: 0.26; }
+:root[data-daytime="night"] .horizon-haze { opacity: 0.28; }
+:root[data-daytime="dusk"] .horizon-haze { opacity: 0.68; }
 
 * { box-sizing: border-box; }
 
@@ -110,8 +242,8 @@ body {
   font-size: 0.85rem;
   font-weight: 700;
   letter-spacing: 0.04em;
-  color: var(--ink);
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+  color: var(--scene-ink);
+  text-shadow: 0 1px 0 var(--scene-halo);
   opacity: 0.8;
   z-index: 16;
 }
@@ -123,19 +255,13 @@ body {
   z-index: 16;
   display: flex;
   gap: 2px;
-  background: rgba(255, 255, 255, 0.55);
-  border: 1px solid rgba(255, 255, 255, 0.8);
+  background: var(--scene-glass-flat);
+  border: 1px solid var(--scene-glass-border);
   border-radius: 999px;
   padding: 3px;
   box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
-@media (prefers-color-scheme: dark) {
-  .tab-switch {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.14);
-  }
-}
 
 .tab-btn {
   font-family: inherit;
@@ -144,23 +270,21 @@ body {
   padding: 6px 14px;
   border-radius: 999px;
   font-size: 0.75rem;
-  color: var(--ink-soft);
+  color: var(--scene-ink-soft);
   cursor: pointer;
   transition: background 0.2s ease, color 0.2s ease;
 }
 
 .tab-btn.active {
   background: linear-gradient(180deg, #ffffff 0%, #d9f2f7 100%);
-  color: var(--ink);
+  color: #2f4a55;
   font-weight: 600;
   box-shadow: 0 2px 6px rgba(70, 130, 150, 0.25);
 }
 
-@media (prefers-color-scheme: dark) {
-  .tab-btn.active {
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.08) 100%);
-    color: var(--ink);
-  }
+/* Активная вкладка ночью — светлое стекло, но подпись на нём тёмная. */
+:root[data-daytime="night"] .tab-btn.active {
+  background: linear-gradient(180deg, rgba(226, 244, 250, 0.95) 0%, rgba(190, 224, 236, 0.9) 100%);
 }
 
 .view {
@@ -434,8 +558,8 @@ body {
   text-align: center;
   max-width: 260px;
   width: max-content;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.55) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.9);
+  background: var(--scene-glass);
+  border: 1px solid var(--scene-glass-border);
   backdrop-filter: blur(6px);
   border-radius: 18px;
   padding: 6px 16px 8px;
@@ -451,25 +575,16 @@ body {
   transform: translateX(-50%);
   border-width: 8px 7px 0 7px;
   border-style: solid;
-  border-color: rgba(255, 255, 255, 0.72) transparent transparent transparent;
+  border-color: var(--scene-tail) transparent transparent transparent;
 }
 
-@media (prefers-color-scheme: dark) {
-  .pet-speech {
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.05) 100%);
-    border-color: rgba(255, 255, 255, 0.16);
-  }
-  .pet-speech::after {
-    border-color: rgba(30, 60, 65, 0.55) transparent transparent transparent;
-  }
-}
 
 .pet-name-input {
   display: block;
   margin: 0 auto;
   border: none;
   background: transparent;
-  color: var(--ink);
+  color: var(--scene-ink);
   font-family: inherit;
   font-weight: 700;
   font-size: clamp(0.85rem, 3.2vw, 1.05rem);
@@ -492,7 +607,7 @@ body {
 
 .companion-message {
   margin: 3px 0 0;
-  color: var(--ink-soft);
+  color: var(--scene-ink-soft);
   font-size: clamp(0.7rem, 2.8vw, 0.82rem);
   line-height: 1.35;
 }
@@ -948,21 +1063,16 @@ button:active {
   padding: 16px 20px;
   border-radius: 20px;
   text-align: center;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.68) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.9);
-  box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  background: var(--scene-glass);
+  border: 1px solid var(--scene-glass-border);
+  color: var(--scene-ink);
+  box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.35);
   backdrop-filter: blur(6px);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.55s ease, transform 0.55s ease;
 }
 
-@media (prefers-color-scheme: dark) {
-  .quote-card {
-    background: linear-gradient(180deg, rgba(20, 45, 45, 0.85) 0%, rgba(15, 35, 35, 0.7) 100%);
-    border-color: rgba(255, 255, 255, 0.15);
-  }
-}
 
 .quote-card.visible {
   opacity: 1;
@@ -1059,17 +1169,14 @@ button:active {
   border-radius: 999px;
   font-size: 0.85rem;
   font-weight: 600;
-  color: var(--ink);
-  background: rgba(255, 255, 255, 0.8);
+  color: var(--scene-ink);
+  background: var(--scene-glass-flat);
   box-shadow: var(--shadow);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.5s ease;
 }
 
-@media (prefers-color-scheme: dark) {
-  .egg-hint { background: rgba(20, 45, 45, 0.8); }
-}
 
 .egg-hint.visible {
   opacity: 1;
@@ -1386,10 +1493,10 @@ body.journal-tab .inventory-btn {
   text-align: left;
   cursor: pointer;
   border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.92);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.94) 0%, rgba(240, 252, 255, 0.88) 100%);
+  border: 1px solid var(--scene-glass-border);
+  background: var(--scene-glass);
   backdrop-filter: blur(8px);
-  box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.35);
 }
 
 /* Потолок по месту над питомцем: выше — и пузырь срежет край сцены.
@@ -1408,21 +1515,21 @@ body.journal-tab .inventory-btn {
   width: 18px;
   height: 18px;
   transform: translateX(-50%) rotate(45deg);
-  border-right: 1px solid rgba(255, 255, 255, 0.92);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.92);
-  background: rgba(240, 252, 255, 0.9);
+  border-right: 1px solid var(--scene-glass-border);
+  border-bottom: 1px solid var(--scene-glass-border);
+  background: var(--scene-tail);
 }
 
 .tale-line {
   margin: 0;
-  color: var(--ink);
+  color: var(--scene-ink);
   font-size: clamp(0.84rem, 3.4vw, 0.98rem);
   font-weight: 600;
   line-height: 1.46;
 }
 
 .tale-line.muted {
-  color: var(--ink-soft);
+  color: var(--scene-ink-soft);
   font-weight: 500;
   font-style: italic;
 }
@@ -1468,25 +1575,25 @@ body.journal-tab .inventory-btn {
   padding: 8px 10px;
   border-left: 3px solid var(--accent-2);
   border-radius: 0 12px 12px 0;
-  background: rgba(255, 255, 255, 0.6);
+  background: var(--scene-inset);
 }
 
 .tale-entry-date {
   margin: 0 0 3px;
-  color: var(--ink-soft);
+  color: var(--scene-ink-soft);
   font-size: 0.68rem;
 }
 
 .tale-entry-prompt {
   margin: 0 0 5px;
-  color: var(--ink-soft);
+  color: var(--scene-ink-soft);
   font-size: 0.76rem;
   font-style: italic;
 }
 
 .tale-entry-text {
   margin: 0;
-  color: var(--ink);
+  color: var(--scene-ink);
   font-size: clamp(0.8rem, 3.2vw, 0.9rem);
   line-height: 1.45;
   white-space: pre-wrap;
@@ -1495,28 +1602,14 @@ body.journal-tab .inventory-btn {
 
 .tale-note {
   margin: 8px 0 0;
-  color: var(--ink-soft);
+  color: var(--scene-ink-soft);
   font-size: 0.72rem;
 }
 
-@media (prefers-color-scheme: dark) {
-  .tale-entry { background: rgba(255, 255, 255, 0.07); }
-
-  .tale-bubble {
-    border-color: rgba(255, 255, 255, 0.16);
-    background: linear-gradient(180deg, rgba(24, 58, 68, 0.95) 0%, rgba(18, 48, 57, 0.92) 100%);
-    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.12);
-  }
-
-  .tale-bubble::after {
-    border-color: rgba(255, 255, 255, 0.16);
-    background: rgba(18, 48, 57, 0.95);
-  }
-
-  .pet-badge {
-    border-color: rgba(255, 255, 255, 0.75);
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.7);
-  }
+/* Значок над питомцем ночью держится на тёмном небе — нужен свой контур. */
+:root[data-daytime="night"] .pet-badge {
+  border-color: rgba(255, 255, 255, 0.75);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.7);
 }
 
 /* --- сохранение записей --- */
