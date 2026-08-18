@@ -15,13 +15,25 @@
     "assets/egg_3_crack2.png",
   ];
 
+  // Пороги роста намеренно редкие: питомец должен взрослеть месяцами, а не
+  // за неделю. Первые версии стояли на 3/8/16/30 и совпадали с готовностью
+  // напитка (он готов каждые 3 записи), отчего рост выглядел привязанным
+  // к стакану.
+  //
+  // scale — поправка на то, что персонаж нарисован в своём кадре по-разному:
+  // на первой стадии он занимает 67% высоты, на четвёртой 95%, на пятой
+  // снова 92%. Без поправки взрослый питомец выходил мельче подростка.
+  // Итоговая высота на экране = ширина кадра × доля × scale, и она обязана
+  // расти от стадии к стадии.
   const STAGES = [
-    { min: 0,  glow: "#d7f2ec", idle: "assets/stage1_idle.png", happy: "assets/stage1_happy.png" },
-    { min: 3,  glow: "#cdeee6", idle: "assets/stage2_idle.png", happy: "assets/stage2_happy.png" },
-    { min: 8,  glow: "#c2e9de", idle: "assets/stage3_idle.png", happy: "assets/stage3_happy.png" },
-    { min: 16, glow: "#d3e6f7", idle: "assets/stage4_idle.png", happy: "assets/stage4_happy.png" },
-    { min: 30, glow: "#eae0ff", idle: "assets/stage5_idle.png", happy: "assets/stage5_happy.png" },
+    { min: 0,   scale: 0.93, glow: "#d7f2ec", idle: "assets/stage1_idle.png", happy: "assets/stage1_happy.png" },
+    { min: 30,  scale: 0.93, glow: "#cdeee6", idle: "assets/stage2_idle.png", happy: "assets/stage2_happy.png" },
+    { min: 50,  scale: 1.02, glow: "#c2e9de", idle: "assets/stage3_idle.png", happy: "assets/stage3_happy.png" },
+    { min: 90,  scale: 1.12, glow: "#d3e6f7", idle: "assets/stage4_idle.png", happy: "assets/stage4_happy.png" },
+    { min: 150, scale: 1.33, glow: "#eae0ff", idle: "assets/stage5_idle.png", happy: "assets/stage5_happy.png" },
   ];
+
+  const EGG_SCALE = 0.8;
 
   const INGREDIENTS = [
     { emoji: "🍓", color: "#ff7b93" },
@@ -643,6 +655,7 @@
     if (!stats.hatched) {
       nameInputEl.value = t("eggName");
       nameInputEl.readOnly = true;
+      avatarWrapEl.style.setProperty("--pet-scale", EGG_SCALE);
       glowEl.style.setProperty("--glow-color", "#d7f2ec");
       const progress = clamp(
         Math.max(stats.lifetimeEntries / HATCH_ENTRIES_THRESHOLD, daysSince(stats.firstOpenDate) / HATCH_DAYS_THRESHOLD),
@@ -657,6 +670,7 @@
     // до церемонии, petNamed нет, и переименование им остаётся.
     nameInputEl.readOnly = !!stats.petNamed;
     nameInputEl.value = petName();
+    avatarWrapEl.style.setProperty("--pet-scale", stage.scale);
     glowEl.style.setProperty("--glow-color", stage.glow);
     setAvatarImage(stage.idle);
     preload(stage.happy);
@@ -940,7 +954,9 @@
   // до нечитаемого нельзя, поэтому длинный текст листается по страницам,
   // как в визуальной новелле: тап — следующая порция.
 
-  const PAGE_LIMIT = 150;
+  // Взрослый питомец занимает больше места, и на странице его остаётся
+  // меньше: 150 знаков переставали влезать на узких экранах.
+  const PAGE_LIMIT = 120;
 
   let talePages = [];
   let talePageIndex = 0;
